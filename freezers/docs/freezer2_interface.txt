@@ -1,0 +1,53 @@
+1、通用检测图片接口(post)：http://$dns$/api/freezerimage/
+post入参：
+source  file
+corpid  string，商家id
+deviceid string，设备id
+返回201：
+[
+    {
+        "class": 2,                           -- 检测类型 1至12
+        "score": 0.5095015168190002,          -- 检测可能性评分
+        "xmin": 37,                           -- 左上角横坐标
+        "ymin": 116,                          -- 左上角纵坐标
+        "xmax": 855,                          -- 右下角横坐标
+        "ymax": 940                           -- 右下角纵坐标
+    }
+    {
+        "class": 3,                           -- 检测类型 1至12
+        "score": 0.5095015168190002,          -- 检测可能性评分
+        "xmin": 37,                           -- 左上角横坐标
+        "ymin": 116,                          -- 左上角纵坐标
+        "xmax": 855,                          -- 右下角横坐标
+        "ymax": 940                           -- 右下角纵坐标
+    }
+]
+
+2、提交训练数据接口(post)：http://$dns$/api/addtrain?corpid=xx&batchid=xx
+post入参：json
+{
+    data:[{
+    'image':'http://$dns$/.../xx.jpg',
+    'xml':'http://$dns$/.../xx.jpg'
+    },{
+    'image':'http://$dns$/.../xx.jpg',
+    'xml':'http://$dns$/.../xx.jpg'
+    },{
+    'image':'http://$dns$/.../xx.jpg',
+    'xml':'http://$dns$/.../xx.jpg'
+    },{
+    'image':'http://$dns$/.../xx.jpg',
+    'xml':'http://$dns$/.../xx.jpg'
+    }
+    ]
+}
+返回201：
+
+3、询问训练进度接口(get)：http://$dns$/api/trainstatus?corpid=xx&batchid=xx
+返回200：
+{
+    "status": 0,                          -- 0:不存在，1:排队中，2：正在训练，3：训练结束
+    "complete_percent": 0.22,             -- 完成比例
+    "calculate_time": 137,                -- 如训练结束，则训练时间
+    "precision": 0.98,                    -- 如训练结束，则返回模型精准度
+}
