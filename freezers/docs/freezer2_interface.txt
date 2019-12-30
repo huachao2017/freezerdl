@@ -28,16 +28,16 @@ post入参：json
 {
     data:[{
     'image':'http://$dns$/.../xx.jpg',
-    'xml':'http://$dns$/.../xx.jpg'
+    'xml':'http://$dns$/.../xx.xml'
     },{
     'image':'http://$dns$/.../xx.jpg',
-    'xml':'http://$dns$/.../xx.jpg'
+    'xml':'http://$dns$/.../xx.xml'
     },{
     'image':'http://$dns$/.../xx.jpg',
-    'xml':'http://$dns$/.../xx.jpg'
+    'xml':'http://$dns$/.../xx.xml'
     },{
     'image':'http://$dns$/.../xx.jpg',
-    'xml':'http://$dns$/.../xx.jpg'
+    'xml':'http://$dns$/.../xx.xml'
     }
     ]
 }
