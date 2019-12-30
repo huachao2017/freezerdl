@@ -1,7 +1,7 @@
 1、通用检测图片接口(post)：http://$dns$/api/freezerimage/
 post入参：
 source  file
-corpid  string，商家id
+groupid  string，分组id
 deviceid string，设备id
 返回201：
 [
@@ -23,7 +23,7 @@ deviceid string，设备id
     }
 ]
 
-2、提交训练数据接口(post)：http://$dns$/api/addtrain?corpid=xx&versionid=xx
+2、提交训练数据接口(post)：http://$dns$/api/addtrain?groupid=xx&modelid=xx
 post入参：json
 {
     data:[{
@@ -43,7 +43,7 @@ post入参：json
 }
 返回201：
 
-3、询问训练进度接口(get)：http://$dns$/api/trainstatus?corpid=xx&versionid=xx
+3、询问训练进度接口(get)：http://$dns$/api/trainstatus?groupid=xx&modelid=xx
 返回200：
 {
     "status": 0,                          -- 0:不存在，1:排队中，2：正在训练，3：训练结束
