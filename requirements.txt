@@ -1,0 +1,12 @@
+django<=1.11.7
+djangorestframework
+django-filter
+django-crontab
+opencv_python<=3.4.2.16
+mysqlclient
+opencv-contrib-python
+scipy>=1.0.0
+demjson
+django-cors-headers
+keras==2.2.4
+
