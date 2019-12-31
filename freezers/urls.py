@@ -26,5 +26,6 @@ router.register(r'trainrecord', views.TrainRecordViewSet)
 
 urlpatterns = [
     url(r'^test', views.Test.as_view()),
-    url(r'^api/', include(router.urls))
+    url(r'^api/', include(router.urls)),
+    url(r'^api/addtrain', views.AddTrain.as_view()),
 ]

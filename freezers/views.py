@@ -70,6 +70,8 @@ class FreezerImageViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, mixins
         headers = self.get_success_headers(serializer.data)
 
         logger.info('begin detect:{},{}'.format(serializer.instance.deviceid, serializer.instance.source.path))
+
+        # TODO 调用检测
         ret = []
         # if freezer_check_yolov3_switch:
         #     detect_ret, aiinterval, visual_image_path = yolov3.detect(serializer.instance.source.path)
@@ -94,3 +96,26 @@ class TrainRecordViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, mixins.
                           viewsets.GenericViewSet):
     queryset = TrainRecord.objects.order_by('-id')
     serializer_class = TrainRecordSerializer
+
+class AddTrain(APIView):
+    def post(self, request):
+        try:
+            group_id = int(request.query_params['groupid'])
+            model_id = int(request.query_params['modelid'])
+
+            data = request.data
+            TrainRecord.objects.create(
+                group_id=group_id,
+                model_id=model_id,
+                upcs=data.upcs,
+                datas=data.files,
+                status=0
+            )
+
+
+            return Response(status=status.HTTP_200_OK)
+
+        except Exception as e:
+            logger.error('OrderConfirm error:{}'.format(e))
+            traceback.print_exc()
+            return Response(-1, status=status.HTTP_400_BAD_REQUEST)
