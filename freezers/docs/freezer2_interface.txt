@@ -27,13 +27,12 @@ deviceid string，设备id
 post入参：json
 {
     "upcs":["6921168","6921169" ],  -- 对应xml文件里的类别
-    "dns":"http://$dns$",
     "files":[{
-    "image":"/.../xx.jpg",          -- 照片路径
-    "xml":"/.../xx.xml"             -- xml路径
+    "image":"http://$dns$/.../xx.jpg",          -- 照片路径
+    "xml":"http://$dns$/.../xx.xml"             -- xml路径
     },{
-    "image":"/.../xx.jpg",
-    "xml":"/.../xx.xml"
+    "image":"http://$dns$/.../xx.jpg",
+    "xml":"http://$dns$/.../xx.xml"
     }]
 }
 返回201：
