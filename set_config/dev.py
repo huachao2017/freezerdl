@@ -10,10 +10,5 @@ yolov3_train_params = {
 }
 
 yolov3_predict_params = {
-    "good_model_path": '/data/ai/model/{}_{}.h5',
-    "score": 0.23,
-    "iou": 0.45,
     "font_file": './model_train/keras_yolo3/font/FiraMono-Medium.otf',
-    "diff_switch_iou": (True, 0.6),
-    "single_switch_iou_minscore": (True, 0.0, 0.28)
 },

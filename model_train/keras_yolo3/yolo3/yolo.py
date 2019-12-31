@@ -19,28 +19,33 @@ import os
 from keras.utils import multi_gpu_model
 from set_config import config
 from model_train.keras_yolo3.util.default_anchors import default_anchors
+import tensorflow as tf
+from keras.backend.tensorflow_backend import set_session
 gpu_num = 1
 font_file = config.yolov3_predict_params['font_file']
-(diff_switch,diff_iou) =  config.yolov3_predict_params['diff_switch_iou']
-(single_switch,single_iou,single_min_score) =  config.yolov3_predict_params['single_switch_iou_minscore']
 class YOLO(object):
-    _defaults = {
-        "model_path":  config.yolov3_predict_params['good_model_path'],
-        "score" :  config.freezer_params["yolov3_predict"]['score'],
-        "iou" :  config.freezer_params["yolov3_predict"]['iou'],
-        "model_image_size" : (416,416),
-    }
 
-    @classmethod
-    def get_defaults(cls, n):
-        if n in cls._defaults:
-            return cls._defaults[n]
-        else:
-            return "Unrecognized attribute name '" + n + "'"
-
-    def __init__(self,class_names, **kwargs):
-        self.__dict__.update(self._defaults) # set up default values
-        self.__dict__.update(kwargs) # and update with user overrides
+    def __init__(self,class_names,diff_switch_iou,single_switch_iou_minscore,model_path,iou,score):
+        """
+        对象初始化
+        :param class_names: 商品upc 列表
+        :param diff_switch_iou: 不同 类品策略开关及iou配置   (True,0.2)
+        :param single_switch_iou_minscore: 单独 品策略开关及iou配置  (True,0.0,0.28)
+        :param model_path:  线上模型路径
+        :param iou:  线上模型配置 iou
+        :param score:  线上模型阈值
+        """
+        config = tf.ConfigProto()
+        config.gpu_options.allocator_type = 'BFC'  # A "Best-fit with coalescing" algorithm, simplified from a version of dlmalloc.
+        config.gpu_options.per_process_gpu_memory_fraction = 0.1
+        config.gpu_options.allow_growth = True
+        set_session(tf.Session(config=config))
+        (self.diff_switch, self.diff_iou) = diff_switch_iou
+        (self.single_switch, self.single_iou, self.single_min_score) = single_switch_iou_minscore
+        self.model_path = model_path
+        self.iou = iou
+        self.score = score
+        self.model_image_size = (416,416)
         self.class_names = class_names
         self.anchors = np.array(default_anchors)
         self.sess = K.get_session()
@@ -91,6 +96,11 @@ class YOLO(object):
         return boxes, scores, classes
 
     def detect_image(self, image):
+        """
+        绘制待 检测图
+        :param image:
+        :return:
+        """
         start = timer()
         print (str(start))
         print (str(image.width ))
@@ -117,11 +127,11 @@ class YOLO(object):
             })
 
         out_classes, out_scores, out_boxes = list(out_classes),list(out_scores), list(out_boxes)
-        if diff_switch:
-            out_classes, out_scores, out_boxes = proxy.diff_fiter(diff_iou,out_classes, out_scores, out_boxes)
+        if self.diff_switch:
+            out_classes, out_scores, out_boxes = proxy.diff_fiter(self.diff_iou,out_classes, out_scores, out_boxes)
 
-        if single_switch:
-            out_classes, out_scores, out_boxes = proxy.single_filter(single_iou, single_min_score,out_classes, out_scores, out_boxes)
+        if self.single_switch:
+            out_classes, out_scores, out_boxes = proxy.single_filter(self.single_iou, self.single_min_score,out_classes, out_scores, out_boxes)
 
         print('Found {} boxes for {}'.format(len(out_boxes), 'img'))
 
@@ -160,6 +170,11 @@ class YOLO(object):
         print(end - start)
         return image
     def predict_img(self,img):
+        """
+        检测图片
+        :param img:  cv2 read的img
+        :return: 类别，得分，位置列表
+        """
         image = Image.fromarray(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
         if self.model_image_size != (None, None):
             assert self.model_image_size[0] % 32 == 0, 'Multiples of 32 required'
@@ -195,10 +210,10 @@ class YOLO(object):
             p_box.append(box)
             score = out_scores[i]
             p_prob.append(score)
-        if diff_switch:
-            p_class, p_prob, p_box = proxy.diff_fiter(diff_iou,  p_class, p_prob, p_box)
-        if single_switch:
-            p_class, p_prob, p_box = proxy.single_filter(single_iou, single_min_score, p_class, p_prob, p_box)
+        if self.diff_switch:
+            p_class, p_prob, p_box = proxy.diff_fiter(self.diff_iou,  p_class, p_prob, p_box)
+        if self.single_switch:
+            p_class, p_prob, p_box = proxy.single_filter(self.single_iou, self.single_min_score, p_class, p_prob, p_box)
         return p_class,p_prob,p_box
     def close_session(self):
         self.sess.close()
