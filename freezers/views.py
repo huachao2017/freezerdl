@@ -79,11 +79,20 @@ class FreezerImageViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, mixins
         #     detector = freezer2detection.ImageDetectorFactory.get_static_detector('freezer2')
         #     detect_ret, aiinterval, visual_image_path = detector.detect(serializer.instance.source.path, step1_min_score_thresh=0.3)
 
-        ret = json.dumps(detect_ret, cls=NumpyEncoder)
-        serializer.instance.ret = ret
-        serializer.instance.visual = visual_image_path.replace(settings.MEDIA_ROOT,'')
-        serializer.instance.save()
+        # ret = json.dumps(detect_ret, cls=NumpyEncoder)
+        # serializer.instance.ret = ret
+        # serializer.instance.visual = visual_image_path.replace(settings.MEDIA_ROOT,'')
+        # serializer.instance.save()
 
         logger.info('end detect:{}'.format(serializer.instance.deviceid))
         return Response(serializer.instance.ret, status=status.HTTP_201_CREATED, headers=headers)
 
+class OnlineModelsViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, mixins.RetrieveModelMixin,
+                          viewsets.GenericViewSet):
+    queryset = OnlineModels.objects.order_by('-id')
+    serializer_class = OnlineModelsSerializer
+
+class TrainRecordViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, mixins.RetrieveModelMixin,
+                          viewsets.GenericViewSet):
+    queryset = TrainRecord.objects.order_by('-id')
+    serializer_class = TrainRecordSerializer
