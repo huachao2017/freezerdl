@@ -21,10 +21,11 @@ from freezers import views
 router = DefaultRouter()
 
 router.register(r'freezerimage', views.FreezerImageViewSet)
+router.register(r'onlinemodels', views.OnlineModelsViewSet)
+router.register(r'trainrecord', views.TrainRecordViewSet)
 
-arm_router = DefaultRouter()
-arm_router.register(r'detect', views_arm.ArmImageViewSet)
 urlpatterns = [
     url(r'^test', views.Test.as_view()),
-    url(r'^api/', include(router.urls))
+    url(r'^api/', include(router.urls)),
+    url(r'^api/addtrain', views.AddTrain.as_view()),
 ]

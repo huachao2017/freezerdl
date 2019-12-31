@@ -26,28 +26,13 @@ deviceid string，设备id
 2、提交训练数据接口(post)：http://$dns$/api/addtrain?groupid=xx&modelid=xx
 post入参：json
 {
-    data:[{
-    'image':'http://$dns$/.../xx.jpg',
-    'xml':'http://$dns$/.../xx.xml'
+    "upcs":["6921168","6921169" ],  -- 对应xml文件里的类别
+    "files":[{
+    "image":"http://$dns$/.../xx.jpg",          -- 照片路径
+    "xml":"http://$dns$/.../xx.xml"             -- xml路径
     },{
-    'image':'http://$dns$/.../xx.jpg',
-    'xml':'http://$dns$/.../xx.xml'
-    },{
-    'image':'http://$dns$/.../xx.jpg',
-    'xml':'http://$dns$/.../xx.xml'
-    },{
-    'image':'http://$dns$/.../xx.jpg',
-    'xml':'http://$dns$/.../xx.xml'
-    }
-    ]
+    "image":"http://$dns$/.../xx.jpg",
+    "xml":"http://$dns$/.../xx.xml"
+    }]
 }
 返回201：
-
-3、询问训练进度接口(get)：http://$dns$/api/trainstatus?groupid=xx&modelid=xx
-返回200：
-{
-    "status": 0,                          -- 0:不存在，1:排队中，2：正在训练，3：训练结束
-    "complete_percent": 0.22,             -- 完成比例
-    "calculate_time": 137,                -- 如训练结束，则训练时间
-    "precision": 0.98,                    -- 如训练结束，则返回模型精准度
-}

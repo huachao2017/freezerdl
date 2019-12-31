@@ -10,9 +10,7 @@ from rest_framework import mixins
 from rest_framework import status
 from rest_framework import viewsets
 from .serializers import *
-from dl import freezer2detection
 from django.conf import settings
-from goods.edge.contour_detect_3d import Contour_3d
 import urllib.request
 import urllib.parse
 import requests
@@ -59,6 +57,7 @@ class NumpyEncoder(json.JSONEncoder):
             return obj.tolist()
         else:
             return super(NumpyEncoder, self).default(obj)
+
 class FreezerImageViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, mixins.RetrieveModelMixin,
                           viewsets.GenericViewSet):
     queryset = FreezerImage.objects.order_by('-id')
@@ -71,6 +70,8 @@ class FreezerImageViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, mixins
         headers = self.get_success_headers(serializer.data)
 
         logger.info('begin detect:{},{}'.format(serializer.instance.deviceid, serializer.instance.source.path))
+
+        # TODO 调用检测
         ret = []
         # if freezer_check_yolov3_switch:
         #     detect_ret, aiinterval, visual_image_path = yolov3.detect(serializer.instance.source.path)
@@ -78,11 +79,43 @@ class FreezerImageViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, mixins
         #     detector = freezer2detection.ImageDetectorFactory.get_static_detector('freezer2')
         #     detect_ret, aiinterval, visual_image_path = detector.detect(serializer.instance.source.path, step1_min_score_thresh=0.3)
 
-        ret = json.dumps(detect_ret, cls=NumpyEncoder)
-        serializer.instance.ret = ret
-        serializer.instance.visual = visual_image_path.replace(settings.MEDIA_ROOT,'')
-        serializer.instance.save()
+        # ret = json.dumps(detect_ret, cls=NumpyEncoder)
+        # serializer.instance.ret = ret
+        # serializer.instance.visual = visual_image_path.replace(settings.MEDIA_ROOT,'')
+        # serializer.instance.save()
 
         logger.info('end detect:{}'.format(serializer.instance.deviceid))
         return Response(serializer.instance.ret, status=status.HTTP_201_CREATED, headers=headers)
 
+class OnlineModelsViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, mixins.RetrieveModelMixin,
+                          viewsets.GenericViewSet):
+    queryset = OnlineModels.objects.order_by('-id')
+    serializer_class = OnlineModelsSerializer
+
+class TrainRecordViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, mixins.RetrieveModelMixin,
+                          viewsets.GenericViewSet):
+    queryset = TrainRecord.objects.order_by('-id')
+    serializer_class = TrainRecordSerializer
+
+class AddTrain(APIView):
+    def post(self, request):
+        try:
+            group_id = int(request.query_params['groupid'])
+            model_id = int(request.query_params['modelid'])
+
+            data = request.data
+            TrainRecord.objects.create(
+                group_id=group_id,
+                model_id=model_id,
+                upcs=data.upcs,
+                datas=data.files,
+                status=0
+            )
+
+
+            return Response(status=status.HTTP_200_OK)
+
+        except Exception as e:
+            logger.error('OrderConfirm error:{}'.format(e))
+            traceback.print_exc()
+            return Response(-1, status=status.HTTP_400_BAD_REQUEST)

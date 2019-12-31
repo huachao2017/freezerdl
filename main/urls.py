@@ -17,9 +17,9 @@ from django.conf.urls import url
 from django.contrib import admin
 from django.conf.urls.static import static
 from django.conf import settings
-from goods.urls import urlpatterns as goods_urlpatterns
+from freezers.urls import urlpatterns as freezers_urlpatterns
 
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-]+goods_urlpatterns+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]+freezers_urlpatterns+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
