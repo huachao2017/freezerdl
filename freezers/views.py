@@ -10,9 +10,7 @@ from rest_framework import mixins
 from rest_framework import status
 from rest_framework import viewsets
 from .serializers import *
-from dl import freezer2detection
 from django.conf import settings
-from goods.edge.contour_detect_3d import Contour_3d
 import urllib.request
 import urllib.parse
 import requests
