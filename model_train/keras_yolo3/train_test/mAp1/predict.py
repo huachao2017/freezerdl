@@ -3,14 +3,14 @@ import numpy
 import os
 import json
 import time
-from freezer.keras_yolo3.yolo3 import yolo
+from model_train.keras_yolo3.yolo3 import yolo
 try:
     import xml.etree.cElementTree as ET
 except ImportError:
     import xml.etree.ElementTree as ET
-YOLO = yolo.YOLO()
 # 选取较低得阈值 预测测试集样本并存储
-def predict (testPath,wfile,select_threshold=0.2,nms=0.15):
+def predict (testPath,wfile,class_names,diff_switch_iou,single_switch_iou_minscore,model_path,iou=0.45,score=0.2):
+    YOLO = yolo.YOLO(class_names,diff_switch_iou,single_switch_iou_minscore,model_path,iou,score)
     startTime = time.time()
     imgs = os.listdir(testPath)
     iNum = len(imgs)
@@ -35,8 +35,6 @@ def predict (testPath,wfile,select_threshold=0.2,nms=0.15):
         jsonL = json.dumps(listPre)
         f.write(str(jsonL))
 
-def _main():
-    predict("E:\\opt\\data\\1_windows\\jpg\\", "./data/wPreFile.txt")
 
 
 
