@@ -10,13 +10,13 @@ from set_config import config
 from model_train.keras_yolo3.util import fileutils,write_img_name,voc_anotion
 import shutil
 from model_train.keras_yolo3.train_test import train
-
-
-def train_service(shop_id,batch_id,type,jpg_path,xml_path,classnames,online_batch_id=None):
+from model_train.keras_yolo3.train_test.mAp1 import predict,mAp
+import demjson
+def train_service(group_id, model_id, type, jpg_path, xml_path, classnames, online_model_id=None):
     """
     训练service
-    :param shop_id: 商家id
-    :param batch_id: 批次id
+    :param group_id: 商家id
+    :param model_id: 批次id
     :param type: 全量 0  增量 1
     :param jpg_path: 训练服务器，图片绝对路径
     :param xml_path: 训练服务器，
@@ -24,13 +24,26 @@ def train_service(shop_id,batch_id,type,jpg_path,xml_path,classnames,online_batc
     :param last_batch_id: 上一版 批次id   如果 增量type  , 这个值必传
     :return: None
     """
-    check_path(shop_id, batch_id, online_batch_id, type)
-    process_train_data(jpg_path, xml_path, shop_id, batch_id, classnames)
-    start_time = time.time()
-    train._main(classnames,shop_id,batch_id,type,online_batch_id)
-    end_time = time.time()
-    save_train_table()
+    try:
+        # 数据处理
+        check_path(group_id, model_id, online_model_id, type)
+        process_train_data(jpg_path, xml_path, group_id, model_id, classnames)
+        # 训练
+        start_time = int(time.time())
+        train._main(classnames, group_id, model_id, type, online_model_id)
+        end_time = int(time.time())
 
+        # 求mAP
+        good_config_params,all_config_params = cal_mAp(group_id,model_id,classnames)
+        end_time1 = int(time.time())
+        # 选择最优的mAp 的参数配置保存数据库
+        save_train_table(group_id, model_id, type,train_los_time = int(end_time-start_time),val_los_time = int(end_time1-end_time),good_config_params= good_config_params,all_config_params = all_config_params,status = 0,des_msg='')
+    except Exception as e:
+        des_msg = str("error:"+e)
+        save_train_table(group_id, model_id, type,
+                         train_los_time=0, val_los_time=0,
+                         good_config_params='', all_config_params='', status=0,
+                         des_msg=des_msg)
 def check_path(shop_id,batch_id,online_batch_id,type):
     if online_batch_id is not None and type == 1:
         online_model = os.path.join(str(config.yolov3_train_params['model_dir']).format(shop_id,online_batch_id),str(shop_id)+"_"+str(online_batch_id)+".h5")
@@ -90,10 +103,76 @@ def process_train_data(jpg_path,xml_path,shop_id, batch_id,classnames):
     write_img_name.generate_main_txt(shop_id,batch_id)
     voc_anotion.convert(shop_id,batch_id,class_names=classnames)
 
-def save_train_table():
+def cal_mAp(shop_id,batch_id,classnames):
+    default_config_params = config.yolov3_train_params['default_config_params']
+    good_select_config_params_mAP = 0
+    good_select_config_params = ''
+    for config_params in default_config_params:
+        wfile = config.yolov3_train_params['predict_wfile']
+        testJpgPath = str(config.yolov3_train_params['JPEGImages_path']).format(shop_id,batch_id)
+        testXmlPath = str(config.yolov3_train_params['Annotations_path']).format(shop_id,batch_id)
+        diff_switch_iou = dict(default_config_params[config_params])["diff_switch_iou"]
+        single_switch_iou_minscore = dict(default_config_params[config_params])["single_switch_iou_minscore"]
+        iou = dict(default_config_params[config_params])["iou"]
+        score = dict(default_config_params[config_params])["score"]
+        model_path = os.path.join(str(config.yolov3_train_params['model_dir']).format(shop_id,batch_id),str("{}_{}.h5").format(shop_id,batch_id))
+        predict.predict(testJpgPath, wfile, classnames, diff_switch_iou, single_switch_iou_minscore, model_path, iou =iou, score =score)
+        mAp_ins = mAp.MAp(classnames,testXmlPath,testJpgPath,wfile)
+        ap_dict = mAp_ins.averagePrecision()
+        mAp_value = mAp_ins.meanAveragePrecesion(ap_dict)
+        default_config_params[config_params]["Ap"] = ap_dict
+        default_config_params[config_params]["mAp"] = float(mAp_value)
+        if mAp_value >= good_select_config_params_mAP:
+            good_select_config_params = default_config_params[config_params]
+            good_select_config_params_mAP = mAp_value
+    return good_select_config_params,default_config_params
+
+
+
+
+def save_train_table(group_id, model_id, type,train_los_time=0,val_los_time=0,good_config_params='',all_config_params='',status=1,des_msg=''):
     close_old_connections()
     conn = connections['default']
     cursor_ai = conn.cursor()
+    delete_sql = "delete from freezers_traindetail where group_id = {} and model_id ={} and type={} "
+    cursor_ai.execute(
+        delete_sql.format(group_id,model_id,type))
+    cursor_ai.connection.commit()
+
+    insert_sql = "insert into freezers_traindetail (group_id,model_id,model_path,accuracy_rate,create_time,params_config,status,train_los_time,val_result,type,val_los_time,des_msg) values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+
+    model_path = os.path.join(str(config.yolov3_train_params['model_dir']).format(group_id,model_id),str("{}_{}.h5").format(group_id,model_id))
+    config_param = ''
+    if good_config_params != '':
+        accuracy_rate = float(good_config_params['mAP'])
+        good_config_params['diff_switch_iou'][0] = True
+        good_config_params['single_switch_iou_minscore'][0] = True
+        config_param = demjson.encode(good_config_params)
+
+    else:
+        accuracy_rate = 0.0
+    val_result = ''
+    if all_config_params != '':
+        val_result = demjson.encode(all_config_params)
+    create_time = str(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime()))
+    data = [(
+        group_id,
+        model_id,
+        model_path,
+        accuracy_rate,
+        create_time,
+        config_param,
+        status,
+        train_los_time,
+        val_result,
+        type,
+        val_los_time,
+        des_msg
+    )]
+    cursor_ai.executemany(insert_sql, data)
+    cursor_ai.connection.commit()
+    conn.close()
+    cursor_ai.close()
 
 def parse_arguments(argv):
     # type,jpg_path,xml_path,classnames,online_batch_id
