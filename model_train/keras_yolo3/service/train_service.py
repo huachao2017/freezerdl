@@ -1,4 +1,5 @@
-
+import argparse
+import sys
 import os
 import django
 import main.import_django_settings
@@ -172,4 +173,37 @@ def save_train_table(group_id, model_id, type,train_los_time=0,val_los_time=0,go
     cursor_ai.connection.commit()
     conn.close()
     cursor_ai.close()
+
+def parse_arguments(argv):
+    # type,jpg_path,xml_path,classnames,online_batch_id
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument('--groupid', type=int, help='groupid', default=0)
+    parser.add_argument('--modelid', type=int,
+                        help='modelid', default=0)
+    parser.add_argument('--type', type=int,
+                        help='type', default=0)
+    parser.add_argument('--jpg_path', type=str,
+                        help='jpg_path', default='')
+    parser.add_argument('--xml_path', type=str,
+                        help='xml_path', default='')
+    parser.add_argument('--classnames', type=str,
+                        help='classnames', default='')
+    parser.add_argument('--online_model_id', type=int,
+                        help='online_model_id', default=0)
+    return parser.parse_args(argv)
+
+if __name__ == "__main__":
+    import json
+    args = parse_arguments(sys.argv[1:])
+
+    train_service(
+        args.groupid,
+        args.modelid,
+        args.type,
+        args.jpg_path,
+        args.xml_path,
+        json.loads(args.classnames),
+        args.online_model_id
+    )
 
