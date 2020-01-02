@@ -130,7 +130,7 @@ def cal_mAp(shop_id,batch_id,classnames):
 
 
 
-def save_train_table(group_id, model_id, type,train_los_time=0,val_los_time=0,good_config_param='',all_config_params='',status=1,des_msg=''):
+def save_train_table(group_id, model_id, type,train_los_time=0,val_los_time=0,good_config_params='',all_config_params='',status=1,des_msg=''):
     close_old_connections()
     conn = connections['default']
     cursor_ai = conn.cursor()
@@ -143,11 +143,11 @@ def save_train_table(group_id, model_id, type,train_los_time=0,val_los_time=0,go
 
     model_path = os.path.join(str(config.yolov3_train_params['model_dir']).format(group_id,model_id),str("{}_{}.h5").format(group_id,model_id))
     config_param = ''
-    if good_config_param != '':
-        accuracy_rate = float(good_config_param['mAP'])
-        good_config_param['diff_switch_iou'][0] = True
-        good_config_param['single_switch_iou_minscore'][0] = True
-        config_param = demjson.encode(good_config_param)
+    if good_config_params != '':
+        accuracy_rate = float(good_config_params['mAP'])
+        good_config_params['diff_switch_iou'][0] = True
+        good_config_params['single_switch_iou_minscore'][0] = True
+        config_param = demjson.encode(good_config_params)
 
     else:
         accuracy_rate = 0.0
