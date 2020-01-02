@@ -98,7 +98,7 @@ class YOLO(object):
     def detect_image(self, image):
         """
         绘制待 检测图
-        :param image:
+        :param image:  pillow 读取图
         :return:
         """
         start = timer()
@@ -168,7 +168,7 @@ class YOLO(object):
             del draw
         end = timer()
         print(end - start)
-        return image
+        return image,out_classes, out_scores, out_boxes
     def predict_img(self,img):
         """
         检测图片
