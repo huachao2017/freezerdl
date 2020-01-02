@@ -94,7 +94,7 @@ def process_train_data(jpg_path,xml_path,shop_id, batch_id,classnames):
     jpgfiles = os.listdir(jpg_path)
     xmlfiles = os.listdir(xml_path)
     for xmlfile in xmlfiles:
-        xmlfile_path = os.listdir(xmlfiles,xmlfile)
+        xmlfile_path = os.path.join(xml_path,xmlfile)
         file_name,ext_name = os.path.splitext(xmlfile)
         jpgfile =  file_name + ".jpg"
         if os.path.getsize(xmlfile_path)>0 and jpgfile in jpgfiles and os.path.getsize(os.path.join(jpg_path,jpgfile)) > 0:
