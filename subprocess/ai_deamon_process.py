@@ -74,6 +74,7 @@ if __name__ == "__main__":
                         xml_name = file['xml'].split('/')[-1]
                         urllib.request.urlretrieve(file['xml'], os.path.join(xml_download_file_dir, xml_name))
 
+                    waiting_record.pic_cnt = len(files)
                     waiting_record.save()
 
                     log_dir = config.yolov3_train_params['log_dir'].format(waiting_record.group_id, waiting_record.model_id)

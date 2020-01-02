@@ -5,6 +5,8 @@ import shutil
 import os
 import time
 import traceback
+import requests
+import json
 import main.import_django_settings
 
 from freezers.models import OnlineModels, TrainRecord
@@ -13,6 +15,7 @@ from django.db import close_old_connections
 from django.db import connections
 
 app_online_model_dir = "/data/model/online"
+backend_dns = "" # fixme
 
 if __name__ == "__main__":
     while True:
@@ -56,17 +59,24 @@ if __name__ == "__main__":
                     os.system('touch /home/src/freezerdl/main/settings.py')
                     os.system('touch /home/src/freezerdl/main/test_settings.py')
 
-                    # TODO 通知后台
-                    # url = "https://autodisplay:xianlife2018@taizhang.aicvs.cn/api/autoDisplay"
-                    # headers = {
-                    #     "Accept": "application/json",
-                    #     "Content-Type": "application/json"
-                    # }
-                    # for taizhang_display in taizhang_display_list:
-                    #     json_info = json.dumps(taizhang_display.to_json())
-                    #     data = bytes(json_info, 'utf8')
-                    #     resp = requests.post(url=url, data=data, headers=headers)
-                    #     print('通知台账系统：'.format(resp))
+                    # 通知后台
+                    url = "https://{}/admin/train_model/add".format(backend_dns)
+                    headers = {
+                        "Accept": "application/json",
+                        "Content-Type": "application/json"
+                    }
+                    json_data = {
+                        "model_id":train_record.model_id,
+                        "complete_time":"", # fixme
+                        "duration":"", # fixme
+                        "sku_count": len(train_record.upcs),
+                        "image_count": train_record.pic_cnt,
+                        "accuracy_rate": train_record.accuracy_rate,
+                    }
+                    json_info = json.dumps(json_data)
+                    data = bytes(json_info, 'utf8')
+                    resp = requests.post(url=url, data=data, headers=headers)
+                    print('通知后台系统：'.format(resp))
 
                 except Exception as e:
                     traceback.print_exc()
