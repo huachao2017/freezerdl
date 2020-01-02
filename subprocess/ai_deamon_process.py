@@ -29,6 +29,9 @@ if __name__ == "__main__":
                 if len(waiting_records) > 0: # 发现有排队的
                     waiting_record = waiting_records[0]
                     log_dir = config.yolov3_train_params['log_dir'].format(waiting_record.group_id, waiting_record.model_id)
+
+                    # TODO 下载图片
+
                     # TODO 启动训练进程
                     command = 'nohup python3 {}/raw/train.py -- > {}/train.out 2>&1 &'.format(
                         os.path.join(settings.BASE_DIR, 'dl'),
@@ -38,7 +41,24 @@ if __name__ == "__main__":
                     subprocess.call(command, shell=True)
 
             # 任务2：轮询训练状态，训练状态表字段表明结束后，拷贝模型，更新数据库
-            # TODO
+            cursor_default.execute("select tr.id, td.status, td.model_path, td.accuracy_rate from freezers_traindetail as td left join freezers_trainrecord as tr on tr.model_id=om.model_id where tr.model_id is null")
+            finish_train_details = cursor_default.fetchall()
+            for finish_train_detail in finish_train_details:
+                train_record = TrainRecord.objects.get(id=finish_train_detail[0])
+                if finish_train_detail[1] == 0:
+                    train_record.status = 30
+                    train_record.save()
+                else:
+                    ai_model_path = finish_train_detail[2]
+                    train_record.status = 20
+                    train_record.model_path = 0 # fixme
+                    train_record.duration = 0 # fixme
+                    train_record.finishtime = 0 # fixme
+                    train_record.accuracy_rate = finish_train_detail[3]
+
+
+                    # TODO 拷贝模型
+                    train_record.save()
 
         except Exception as e:
             print('守护进程出现错误：{}'.format(e))
