@@ -9,7 +9,7 @@ import traceback
 import urllib.request
 import subprocess
 import main.import_django_settings
-from freezers.models import TrainRecord
+from freezers.models import TrainRecord, OnlineModels
 
 from django.conf import settings
 
@@ -51,14 +51,37 @@ if __name__ == "__main__":
 
                     waiting_record.save()
 
-                    # TODO 需要判断全量和增量
                     log_dir = config.yolov3_train_params['log_dir'].format(waiting_record.group_id, waiting_record.model_id)
-
-                    # FIXME 启动训练进程
-                    command = 'nohup python3 {}/raw/train.py -- > {}/train.out 2>&1 &'.format(
-                        os.path.join(settings.BASE_DIR, 'dl'),
-                        log_dir
+                    # 判断全量和增量
+                    online_models = OnlineModels.objects.filter(status=10).filter(group_id=waiting_record.group_id).all()
+                    if len(online_models)>0:
+                        type = 1
+                        command = "nohup python3 {}/raw/train.py --groupid {} --modelid {} --type {} --jpg_path {} --xml_path {} --classnames {} --online_model_id {}    > {}/train.out 2>&1 &".format(
+                            os.path.join(settings.BASE_DIR, 'dl'),
+                            waiting_record.group_id,
+                            waiting_record.model_id,
+                            type,
+                            img_download_file_dir,
+                            xml_download_file_dir,
+                            waiting_record.upcs,
+                            online_models[0].model_id,
+                            log_dir
+                        )
+                    else:
+                        type = 0
+                        command = "nohup python3 {}/raw/train.py --groupid {} --modelid {} --type {} --jpg_path {} --xml_path {} --classnames {} --online_model_id {}    > {}/train.out 2>&1 &".format(
+                            os.path.join(settings.BASE_DIR, 'dl'),
+                            waiting_record.group_id,
+                            waiting_record.model_id,
+                            type,
+                            img_download_file_dir,
+                            xml_download_file_dir,
+                            waiting_record.upcs,
+                            '',
+                            log_dir
                     )
+
+                    # 启动训练进程
                     print(command)
                     subprocess.call(command, shell=True)
 
