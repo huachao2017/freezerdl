@@ -1,6 +1,8 @@
 """
 比较线上版本和训练表，如有新的模型，更新数据库表并发布上线
 """
+import shutil
+import os
 import time
 import traceback
 import main.import_django_settings
@@ -9,6 +11,8 @@ from freezers.models import OnlineModels, TrainRecord
 
 from django.db import close_old_connections
 from django.db import connections
+
+app_online_model_dir = "/data/model/online"
 
 if __name__ == "__main__":
     while True:
@@ -25,7 +29,44 @@ if __name__ == "__main__":
             for train_record in train_records:
                 try:
                     begin_time = time.time()
-                    # TODO 更新数据库表并发布上线
+
+                    # 更新数据库表
+                    all_online_models = OnlineModels.objects.filter(group_id=train_record.group_id).filter(status=10).all()
+                    for online_model in all_online_models:
+                        online_model.status = 0
+                        online_model.save()
+
+                    # 添加数据库表
+                    type = 0
+                    online_model_path = "{}/{}/{}.{}".format(app_online_model_dir, train_record.group_id, type, 'h5')
+                    OnlineModels.objects.create(
+                        group_id = train_record.group_id,
+                        model_id = train_record.model_id,
+                        type = type,
+                        model_path = online_model_path,
+                        upcs = train_record.upcs,
+                        params = "", # fixme
+                        status = 10
+                    )
+
+                    # 拷贝模型
+                    shutil.copy(train_record.model_path, online_model_path)
+
+                    # 发布上线
+                    os.system('touch /home/src/freezerdl/main/settings.py')
+                    os.system('touch /home/src/freezerdl/main/test_settings.py')
+
+                    # TODO 通知后台
+                    # url = "https://autodisplay:xianlife2018@taizhang.aicvs.cn/api/autoDisplay"
+                    # headers = {
+                    #     "Accept": "application/json",
+                    #     "Content-Type": "application/json"
+                    # }
+                    # for taizhang_display in taizhang_display_list:
+                    #     json_info = json.dumps(taizhang_display.to_json())
+                    #     data = bytes(json_info, 'utf8')
+                    #     resp = requests.post(url=url, data=data, headers=headers)
+                    #     print('通知台账系统：'.format(resp))
 
                 except Exception as e:
                     traceback.print_exc()

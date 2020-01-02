@@ -19,7 +19,7 @@ from set_config import config
 
 img_download_file_dir_template = "/data/downloads/{}_{}/imgs/"
 xml_download_file_dir_template = "/data/downloads/{}_{}/xmls/"
-app_models_path = "/data"
+app_models_path = "/data/model/bak"
 app_host = ""
 app_user = ""
 app_password = ""
@@ -81,7 +81,7 @@ if __name__ == "__main__":
                     online_models = OnlineModels.objects.filter(status=10).filter(group_id=waiting_record.group_id).all()
                     if len(online_models)>0:
                         type = 1
-                        command = "nohup python3 {}/raw/train.py --groupid {} --modelid {} --type {} --jpg_path {} --xml_path {} --classnames {} --online_model_id {}    > {}/train.out 2>&1 &".format(
+                        command = "nohup python3 {}/raw/train.py --groupid={} --modelid={} --type={} --jpg_path={} --xml_path={} --classnames={} --online_model_id={}    > {}/train.out 2>&1 &".format(
                             os.path.join(settings.BASE_DIR, 'dl'),
                             waiting_record.group_id,
                             waiting_record.model_id,
@@ -94,7 +94,7 @@ if __name__ == "__main__":
                         )
                     else:
                         type = 0
-                        command = "nohup python3 {}/raw/train.py --groupid {} --modelid {} --type {} --jpg_path {} --xml_path {} --classnames {} --online_model_id {}    > {}/train.out 2>&1 &".format(
+                        command = "nohup python3 {}/raw/train.py --groupid={} --modelid={} --type={} --jpg_path={} --xml_path={} --classnames={} --online_model_id={}    > {}/train.out 2>&1 &".format(
                             os.path.join(settings.BASE_DIR, 'dl'),
                             waiting_record.group_id,
                             waiting_record.model_id,
