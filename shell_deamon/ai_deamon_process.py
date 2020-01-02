@@ -7,7 +7,7 @@ import time
 import json
 import traceback
 import urllib.request
-import subprocess
+import shell_deamon
 import main.import_django_settings
 from freezers.models import TrainRecord, OnlineModels
 
@@ -109,7 +109,7 @@ if __name__ == "__main__":
 
                     # 启动训练进程
                     print(command)
-                    subprocess.call(command, shell=True)
+                    shell_deamon.call(command, shell=True)
 
             # 任务2：轮询训练状态，训练状态表字段表明结束后，拷贝模型，更新数据库
             cursor_default.execute("select tr.id, td.status, td.model_path, td.accuracy_rate from freezers_traindetail as td left join freezers_trainrecord as tr on tr.model_id=om.model_id where tr.model_id is null")
