@@ -19,7 +19,32 @@ from set_config import config
 
 img_download_file_dir_template = "/data/downloads/{}_{}/imgs/"
 xml_download_file_dir_template = "/data/downloads/{}_{}/xmls/"
-app_models_path = ""
+app_models_path = "/data"
+app_host = ""
+app_user = ""
+app_password = ""
+
+class RemoteShell:
+    def __init__(self, host, user, pwd):
+        self.host = host
+        self.user = user
+        self.pwd = pwd
+
+    def put(self, local_path, remote_path):
+        scp_put = '''  
+        set timeout -1
+        spawn scp %s %s@%s:%s  
+        expect "(yes/no)?" {  
+        send "yes\r"  
+        expect "password:"  
+        send "%s\r"  
+        } "password:" {send "%s\r"}  
+        expect eof  
+        exit'''
+        os.system("echo '%s' > scp_put.cmd" % (scp_put % (os.path.expanduser(local_path), self.user, self.host, remote_path, self.pwd, self.pwd)))
+        os.system('expect scp_put.cmd')
+        os.system('rm scp_put.cmd')
+
 if __name__ == "__main__":
     while True:
         print('workflow deamon is alive')
@@ -95,14 +120,18 @@ if __name__ == "__main__":
                     train_record.save()
                 elif finish_train_detail[1] == 1:
                     ai_model_path = finish_train_detail[2]
+                    ai_model_name = ai_model_path.split('/')[-1]
                     train_record.status = 20
-                    train_record.model_path = 0 # fixme
+                    train_record.model_path = '{}/{}_{}_{}'.format(app_models_path, train_record.group_id, train_record.model_id, ai_model_name)
                     train_record.duration = 0 # fixme
                     train_record.finishtime = 0 # fixme
                     train_record.accuracy_rate = finish_train_detail[3]
 
 
-                    # TODO 拷贝模型
+                    # 拷贝模型
+                    rs = RemoteShell(app_host, app_user, app_password)
+                    rs.put(ai_model_path, train_record.model_path)
+
                     train_record.save()
 
         except Exception as e:
