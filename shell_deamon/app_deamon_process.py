@@ -13,9 +13,7 @@ from freezers.models import OnlineModels, TrainRecord
 
 from django.db import close_old_connections
 from django.db import connections
-
-app_online_model_dir = "/data/model/online"
-backend_dns = "" # fixme
+from set_config import config
 
 if __name__ == "__main__":
     while True:
@@ -41,7 +39,7 @@ if __name__ == "__main__":
 
                     # 添加数据库表
                     type = 0
-                    online_model_path = "{}/{}/{}.{}".format(app_online_model_dir, train_record.group_id, type, 'h5')
+                    online_model_path = "{}/{}/{}.{}".format(config.app_config["online_model_dir"], train_record.group_id, type, 'h5')
                     OnlineModels.objects.create(
                         group_id = train_record.group_id,
                         model_id = train_record.model_id,
@@ -60,7 +58,7 @@ if __name__ == "__main__":
                     os.system('touch /home/src/freezerdl/main/test_settings.py')
 
                     # 通知后台
-                    url = "https://{}/admin/train_model/add".format(backend_dns)
+                    url = "https://{}/admin/train_model/add".format(config.app_config["backend_dns"])
                     headers = {
                         "Accept": "application/json",
                         "Content-Type": "application/json"

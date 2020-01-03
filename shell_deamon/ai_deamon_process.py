@@ -17,12 +17,6 @@ from django.db import close_old_connections
 from django.db import connections
 from set_config import config
 
-img_download_file_dir_template = "/data/downloads/{}_{}/imgs/"
-xml_download_file_dir_template = "/data/downloads/{}_{}/xmls/"
-app_models_path = "/data/model/bak"
-app_host = ""
-app_user = ""
-app_password = ""
 
 class RemoteShell:
     def __init__(self, host, user, pwd):
@@ -63,8 +57,8 @@ if __name__ == "__main__":
                     # 下载图片
                     upcs = json.loads(waiting_record.upcs)
                     files = json.loads(waiting_record.datas)
-                    img_download_file_dir = img_download_file_dir_template.format(waiting_record.group_id, waiting_record.model_id)
-                    xml_download_file_dir = xml_download_file_dir_template.format(waiting_record.group_id, waiting_record.model_id)
+                    img_download_file_dir = config.ai_config["img_download_file_dir_template"].format(waiting_record.group_id, waiting_record.model_id)
+                    xml_download_file_dir = config.ai_config["xml_download_file_dir_template"].format(waiting_record.group_id, waiting_record.model_id)
 
                     os.makedirs(img_download_file_dir)
                     os.makedirs(xml_download_file_dir)
@@ -123,14 +117,14 @@ if __name__ == "__main__":
                     ai_model_path = finish_train_detail[2]
                     ai_model_name = ai_model_path.split('/')[-1]
                     train_record.status = 20
-                    train_record.model_path = '{}/{}_{}_{}'.format(app_models_path, train_record.group_id, train_record.model_id, ai_model_name)
+                    train_record.model_path = '{}/{}_{}_{}'.format(config.ai_config["app_models_path"], train_record.group_id, train_record.model_id, ai_model_name)
                     train_record.duration = 0 # fixme
                     train_record.finishtime = 0 # fixme
                     train_record.accuracy_rate = finish_train_detail[3]
 
 
                     # 拷贝模型
-                    rs = RemoteShell(app_host, app_user, app_password)
+                    rs = RemoteShell(config.ai_config["app_host"], config.ai_config["app_user"], config.ai_config["app_password"])
                     rs.put(ai_model_path, train_record.model_path)
 
                     train_record.save()

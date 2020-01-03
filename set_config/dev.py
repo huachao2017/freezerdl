@@ -79,3 +79,17 @@ yolov3_train_params = {
 yolov3_predict_params = {
     "font_file": './model_train/keras_yolo3/font/FiraMono-Medium.otf',
 },
+
+app_config = {
+    "online_model_dir": "/data/model/online",
+    "backend_dns": "http://bizkf.bigmeddata.com"
+}
+
+ai_config = {
+    "img_download_file_dir_template": "/data/downloads/{}_{}/imgs/",
+    "xml_download_file_dir_template": "/data/downloads/{}_{}/xmls/",
+    "app_models_path": "/data/model/bak",
+    "app_host": "192.168.1.62",
+    "app_user": "root",
+    "app_password": "iShehui",
+}
