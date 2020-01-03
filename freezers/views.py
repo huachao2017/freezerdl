@@ -123,8 +123,8 @@ class AddTrain(APIView):
             TrainRecord.objects.create(
                 group_id=group_id,
                 model_id=model_id,
-                upcs=json.dumps(data.upcs),
-                datas=json.dumps(data.files),
+                upcs=json.dumps(data["upcs"]),
+                datas=json.dumps(data["files"]),
                 status=0
             )
 
