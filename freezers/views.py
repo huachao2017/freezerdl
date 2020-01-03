@@ -20,7 +20,7 @@ from model_train.keras_yolo3.yolo3 import yolo
 logger = logging.getLogger("django")
 def start_yolov3_map_models():
     yolov3_ins_map = {}
-    online_models_list = []
+    online_models_list = OnlineModels.objects.filter(status=10)
     for online_models in online_models_list:
         class_names = online_models.upcs
         diff_switch_iou = dict(json.loads(online_models.params))['diff_switch_iou']
