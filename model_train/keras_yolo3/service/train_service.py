@@ -110,7 +110,7 @@ def cal_mAp(shop_id,batch_id,classnames):
     good_select_config_params_mAP = 0
     good_select_config_params = ''
     for config_params in default_config_params:
-        wfile = config.yolov3_train_params['predict_wfile']
+        wfile = (config.yolov3_train_params['predict_wfile']).format(shop_id,batch_id,config_params)
         testJpgPath = str(config.yolov3_train_params['JPEGImages_path']).format(shop_id,batch_id)
         testXmlPath = str(config.yolov3_train_params['Annotations_path']).format(shop_id,batch_id)
         diff_switch_iou = dict(default_config_params[config_params])["diff_switch_iou"]
