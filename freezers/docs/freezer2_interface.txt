@@ -37,6 +37,11 @@ post入参：json
 }
 返回201：
 
+curl -X POST \
+  http://freezerai.fastxbox.cn/api/addtrain?groupid=1\&modelid=1 \
+  -H 'Content-Type: application/json' \
+  -d '{"upcs":["6921168","6921169"],"files":[{"image":"a","xml":"b"},{"image":"a","xml":"b"}]}'
+
 
 3、
 curl -X POST \
