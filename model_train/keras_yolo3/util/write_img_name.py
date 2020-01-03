@@ -15,8 +15,9 @@ def generate_main_txt(shop_id,batch_id):
       for tr in filenames:
          f.write(tr)
          f.write("\n")
+   with open(Main_path+"val.txt",'w') as f:
+      f.write("")
 
-#with open("/home/ai/ai_data/yolov3/VOCdevkit/VOC2007/ImageSets/Main/val.txt",'w') as f:
-#   for v in val:
-#      f.write(v)
-#      f.write("\n")
+   with open(Main_path + "test.txt", 'w') as f:
+      f.write("")
+

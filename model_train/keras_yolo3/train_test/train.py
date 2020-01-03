@@ -18,7 +18,7 @@ from set_config import config
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 os.environ["CUDA_VISIBLE_DEVICES"]="0"
 train_params = config.yolov3_train_params
-def train(shop_id,batch_id,model, annotation_path, input_shape, anchors, num_classes, model_dir='model/',type=None):
+def train(shop_id,batch_id,model, convert_path, input_shape, anchors, num_classes, model_dir='model/',type=None):
     model.compile(optimizer='adam',loss={'yolo_loss':lambda y_true,y_pred:y_pred})
     model_dir = str(model_dir).format(shop_id,batch_id)
     logging = TensorBoard(log_dir=model_dir)
@@ -27,10 +27,15 @@ def train(shop_id,batch_id,model, annotation_path, input_shape, anchors, num_cla
                                  save_weights_only=True, save_best_only=True, period=1)
     batch_size = 15
     val_split = 0.3
-    with open(annotation_path) as f:
+    convert_path = str(convert_path).format(shop_id,batch_id)
+    train_voc_file = os.path.join(convert_path,"2007_train.txt")
+    with open(train_voc_file) as f:
         lines = f.readlines()
     if type is not None and type == 0:
         np.random.shuffle(lines)
+        epochs = train_params['type_add_echos']
+    else:
+        epochs = train_params['type_all_echos']
     num_val = int(len(lines)*val_split)
     num_train = len(lines) - num_val
     print('Train on {} samples, val on {} samples, with batch size {}.'.format(num_train, num_val, batch_size))
@@ -39,7 +44,7 @@ def train(shop_id,batch_id,model, annotation_path, input_shape, anchors, num_cla
                         validation_data=data_generator_wrap(lines[num_train:], batch_size, input_shape, anchors,
                                                             num_classes),
                         validation_steps=max(1, num_val // batch_size),
-                        epochs=train_params['epochs'],initial_epoch=1,callbacks=[logging, checkpoint])
+                        epochs=epochs,initial_epoch=1,callbacks=[logging, checkpoint])
     model.save_weights(model_dir + model_name)
 
 def create_model(input_shape, anchors, num_classes, load_pretrained=True, freeze_body=False,weights_path=None):
@@ -97,7 +102,7 @@ def _main(class_names,shop_id,batch_id,type,online_batch_id):
         flag = True
         weights_path = os.path.join(str(train_params['model_dir']).format(shop_id,batch_id),(str(shop_id)+"_"+str(online_batch_id)+".h5"))
     model = create_model(input_shape, anchors, len(class_names),load_pretrained=flag,weights_path=weights_path)
-    train(shop_id,batch_id,model, train_params['Annotations_path'], input_shape, anchors, len(class_names), model_dir=train_params['model_dir'],type=type)
+    train(shop_id,batch_id,model, train_params['convert_path'], input_shape, anchors, len(class_names), model_dir=train_params['model_dir'],type=type)
 
 if __name__ == '__main__':
     class_names=["1","2","3","4","5"]

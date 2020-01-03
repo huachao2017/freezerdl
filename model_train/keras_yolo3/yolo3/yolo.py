@@ -22,7 +22,7 @@ from model_train.keras_yolo3.util.default_anchors import default_anchors
 import tensorflow as tf
 from keras.backend.tensorflow_backend import set_session
 gpu_num = 1
-font_file = config.yolov3_predict_params['font_file']
+
 class YOLO(object):
 
     def __init__(self,class_names,diff_switch_iou,single_switch_iou_minscore,model_path,iou,score):
@@ -134,7 +134,7 @@ class YOLO(object):
             out_classes, out_scores, out_boxes = proxy.single_filter(self.single_iou, self.single_min_score,out_classes, out_scores, out_boxes)
 
         print('Found {} boxes for {}'.format(len(out_boxes), 'img'))
-
+        font_file = config.yolov3_predict_params['font_file']
         font = ImageFont.truetype(font=font_file,
                     size=np.floor(3e-2 * image.size[1] + 0.5).astype('int32'))
         thickness = (image.size[0] + image.size[1]) // 300

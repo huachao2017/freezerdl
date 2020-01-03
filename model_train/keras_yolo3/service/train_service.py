@@ -12,6 +12,7 @@ import shutil
 from model_train.keras_yolo3.train_test import train
 from model_train.keras_yolo3.train_test.mAp1 import predict,mAp
 import demjson
+import traceback
 def train_service(group_id, model_id, type, jpg_path, xml_path, classnames, online_model_id=None):
     """
     训练service
@@ -39,7 +40,8 @@ def train_service(group_id, model_id, type, jpg_path, xml_path, classnames, onli
         # 选择最优的mAp 的参数配置保存数据库
         save_train_table(group_id, model_id, type,train_los_time = int(end_time-start_time),val_los_time = int(end_time1-end_time),good_config_params= good_config_params,all_config_params = all_config_params,status = 0,des_msg='')
     except Exception as e:
-        des_msg = str("error:"+e)
+        traceback.print_exc()
+        des_msg = "error:e={}".format(e)
         save_train_table(group_id, model_id, type,
                          train_los_time=0, val_los_time=0,
                          good_config_params='', all_config_params='', status=0,
@@ -56,7 +58,7 @@ def check_path(shop_id,batch_id,online_batch_id,type):
     model_dir = str(config.yolov3_train_params['model_dir']).format(shop_id,batch_id)
     log_dir = str(config.yolov3_train_params['log_dir']).format(shop_id, batch_id)
     convert_path = str(config.yolov3_train_params['convert_path']).format(shop_id, batch_id)
-
+    wfile_path = str(config.yolov3_train_params['predict_wfile_path']).format(shop_id, batch_id)
     if not os.path.exists(JPEGImages_path):
         os.makedirs(JPEGImages_path)
     else:
@@ -88,13 +90,19 @@ def check_path(shop_id,batch_id,online_batch_id,type):
         fileutils.remove_path_file(convert_path)
         os.makedirs(convert_path)
 
+    if not os.path.exists(wfile_path):
+        os.makedirs(wfile_path)
+    else:
+        fileutils.remove_path_file(wfile_path)
+        os.makedirs(wfile_path)
+
 def process_train_data(jpg_path,xml_path,shop_id, batch_id,classnames):
     JPEGImages_path = str(config.yolov3_train_params['JPEGImages_path']).format(shop_id, batch_id)
     Annotations_path = str(config.yolov3_train_params['Annotations_path']).format(shop_id, batch_id)
     jpgfiles = os.listdir(jpg_path)
     xmlfiles = os.listdir(xml_path)
     for xmlfile in xmlfiles:
-        xmlfile_path = os.listdir(xmlfiles,xmlfile)
+        xmlfile_path = os.path.join(xml_path,xmlfile)
         file_name,ext_name = os.path.splitext(xmlfile)
         jpgfile =  file_name + ".jpg"
         if os.path.getsize(xmlfile_path)>0 and jpgfile in jpgfiles and os.path.getsize(os.path.join(jpg_path,jpgfile)) > 0:
@@ -108,7 +116,7 @@ def cal_mAp(shop_id,batch_id,classnames):
     good_select_config_params_mAP = 0
     good_select_config_params = ''
     for config_params in default_config_params:
-        wfile = config.yolov3_train_params['predict_wfile']
+        wfile = (config.yolov3_train_params['predict_wfile']).format(shop_id,batch_id,config_params)
         testJpgPath = str(config.yolov3_train_params['JPEGImages_path']).format(shop_id,batch_id)
         testXmlPath = str(config.yolov3_train_params['Annotations_path']).format(shop_id,batch_id)
         diff_switch_iou = dict(default_config_params[config_params])["diff_switch_iou"]
@@ -142,18 +150,24 @@ def save_train_table(group_id, model_id, type,train_los_time=0,val_los_time=0,go
     insert_sql = "insert into freezers_traindetail (group_id,model_id,model_path,accuracy_rate,create_time,params_config,status,train_los_time,val_result,type,val_los_time,des_msg) values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
 
     model_path = os.path.join(str(config.yolov3_train_params['model_dir']).format(group_id,model_id),str("{}_{}.h5").format(group_id,model_id))
-    config_param = ''
     if good_config_params != '':
-        accuracy_rate = float(good_config_params['mAP'])
-        good_config_params['diff_switch_iou'][0] = True
-        good_config_params['single_switch_iou_minscore'][0] = True
-        config_param = demjson.encode(good_config_params)
-
+        accuracy_rate = float(good_config_params['mAp'])
+        (switch,score_st) = good_config_params['diff_switch_iou']
+        (sswitch,s_iou,score_sst) = good_config_params['single_switch_iou_minscore']
+        good_config_params['diff_switch_iou'] = (True,score_st)
+        good_config_params['single_switch_iou_minscore'] = (True,s_iou,score_sst)
+        config_param = {}
+        config_param['diff_switch_iou'] = (True,score_st)
+        config_param['single_switch_iou_minscore'] = (True,s_iou,score_sst)
+        config_param['score'] = good_config_params['score']
+        config_param['iou'] = good_config_params['iou']
+        config_param = demjson.encode(config_param)
     else:
         accuracy_rate = 0.0
+        config_param = ''
     val_result = ''
     if all_config_params != '':
-        val_result = demjson.encode(all_config_params)
+        val_result = str(all_config_params)
     create_time = str(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime()))
     data = [(
         group_id,
