@@ -153,8 +153,10 @@ def save_train_table(group_id, model_id, type,train_los_time=0,val_los_time=0,go
     config_param = ''
     if good_config_params != '':
         accuracy_rate = float(good_config_params['mAp'])
-        good_config_params['diff_switch_iou'][0] = True
-        good_config_params['single_switch_iou_minscore'][0] = True
+        (switch,score_st) = good_config_params['diff_switch_iou']
+        (sswitch,s_iou,score_sst) = good_config_params['single_switch_iou_minscore']
+        good_config_params['diff_switch_iou'] = (True,score_st)
+        good_config_params['single_switch_iou_minscore'] = (True,s_iou,score_sst)
         config_param = demjson.encode(good_config_params)
 
     else:
