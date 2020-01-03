@@ -27,6 +27,7 @@ def train(shop_id,batch_id,model, annotation_path, input_shape, anchors, num_cla
                                  save_weights_only=True, save_best_only=True, period=1)
     batch_size = 15
     val_split = 0.3
+    annotation_path = str(annotation_path).format(shop_id,batch_id)
     with open(annotation_path) as f:
         lines = f.readlines()
     if type is not None and type == 0:
