@@ -12,6 +12,7 @@ import shutil
 from model_train.keras_yolo3.train_test import train
 from model_train.keras_yolo3.train_test.mAp1 import predict,mAp
 import demjson
+import traceback
 def train_service(group_id, model_id, type, jpg_path, xml_path, classnames, online_model_id=None):
     """
     训练service
@@ -39,6 +40,7 @@ def train_service(group_id, model_id, type, jpg_path, xml_path, classnames, onli
         # 选择最优的mAp 的参数配置保存数据库
         save_train_table(group_id, model_id, type,train_los_time = int(end_time-start_time),val_los_time = int(end_time1-end_time),good_config_params= good_config_params,all_config_params = all_config_params,status = 0,des_msg='')
     except Exception as e:
+        traceback.print_exc()
         des_msg = "error:e={}".format(e)
         save_train_table(group_id, model_id, type,
                          train_los_time=0, val_los_time=0,
