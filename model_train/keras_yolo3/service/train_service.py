@@ -150,17 +150,21 @@ def save_train_table(group_id, model_id, type,train_los_time=0,val_los_time=0,go
     insert_sql = "insert into freezers_traindetail (group_id,model_id,model_path,accuracy_rate,create_time,params_config,status,train_los_time,val_result,type,val_los_time,des_msg) values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
 
     model_path = os.path.join(str(config.yolov3_train_params['model_dir']).format(group_id,model_id),str("{}_{}.h5").format(group_id,model_id))
-    config_param = ''
     if good_config_params != '':
         accuracy_rate = float(good_config_params['mAp'])
         (switch,score_st) = good_config_params['diff_switch_iou']
         (sswitch,s_iou,score_sst) = good_config_params['single_switch_iou_minscore']
         good_config_params['diff_switch_iou'] = (True,score_st)
         good_config_params['single_switch_iou_minscore'] = (True,s_iou,score_sst)
-        config_param = str(good_config_params)
-
+        config_param = {}
+        config_param['diff_switch_iou'] = (True,score_st)
+        config_param['single_switch_iou_minscore'] = (True,s_iou,score_sst)
+        config_param['score'] = good_config_params['score']
+        config_param['iou'] = good_config_params['iou']
+        config_param = demjson.encode(config_param)
     else:
         accuracy_rate = 0.0
+        config_param = ''
     val_result = ''
     if all_config_params != '':
         val_result = str(all_config_params)
