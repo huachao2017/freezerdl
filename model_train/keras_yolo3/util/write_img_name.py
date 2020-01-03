@@ -18,6 +18,6 @@ def generate_main_txt(shop_id,batch_id):
    with open(Main_path+"val.txt",'w') as f:
       f.write("")
 
-   with open(Main_path + " test.txt", 'w') as f:
+   with open(Main_path + "test.txt", 'w') as f:
       f.write("")
 
