@@ -16,16 +16,24 @@ import urllib.parse
 import requests
 import traceback
 from django.db import connections
-
+from model_train.keras_yolo3.yolo3 import yolo
 logger = logging.getLogger("django")
-# from goods.freezer.keras_yolo3.yolo3 import yolo_freezer
-# from goods.freezer.keras_yolo3.yolo3 import yolo_mengniu
-# from set_config import config
-# freezer_check_yolov3_switch = config.common_params['freezer_check_yolov3_switch']
-# yolov3 = yolo_freezer.YOLO()
-yolov3 = None
-# mengniu_yolov3 = yolo_mengniu.YOLO()
-mengniu_yolov3 = None
+def start_yolov3_map_models():
+    yolov3_ins_map = {}
+    online_models_list = []
+    for online_models in online_models_list:
+        class_names = online_models.upcs
+        diff_switch_iou = dict(json.loads(online_models.params))['diff_switch_iou']
+        single_switch_iou_minscore =  dict(json.loads(online_models.params))['single_switch_iou_minscore']
+        model_path = online_models.model_path
+        iou =  dict(json.loads(online_models.params))['iou']
+        score = dict(json.loads(online_models.params))['score']
+        yolo_ins = yolo.YOLO(class_names,diff_switch_iou,single_switch_iou_minscore,model_path,iou,score)
+        key = str(online_models.group_id)+"_"+str(online_models.model_id)
+        yolov3_ins_map[key] = yolo_ins
+    return yolov3_ins_map
+yolov3_inss_map = start_yolov3_map_models()
+
 class Test(APIView):
     def get(self, request):
         url = "https://autodisplay:xianlife2018@taizhang.aicvs.cn/api/autoDisplay"
