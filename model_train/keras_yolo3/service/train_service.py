@@ -157,13 +157,13 @@ def save_train_table(group_id, model_id, type,train_los_time=0,val_los_time=0,go
         (sswitch,s_iou,score_sst) = good_config_params['single_switch_iou_minscore']
         good_config_params['diff_switch_iou'] = (True,score_st)
         good_config_params['single_switch_iou_minscore'] = (True,s_iou,score_sst)
-        config_param = demjson.encode(good_config_params)
+        config_param = str(good_config_params)
 
     else:
         accuracy_rate = 0.0
     val_result = ''
     if all_config_params != '':
-        val_result = demjson.encode(all_config_params)
+        val_result = str(all_config_params)
     create_time = str(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime()))
     data = [(
         group_id,
