@@ -58,7 +58,7 @@ def check_path(shop_id,batch_id,online_batch_id,type):
     model_dir = str(config.yolov3_train_params['model_dir']).format(shop_id,batch_id)
     log_dir = str(config.yolov3_train_params['log_dir']).format(shop_id, batch_id)
     convert_path = str(config.yolov3_train_params['convert_path']).format(shop_id, batch_id)
-
+    wfile_path = str(config.yolov3_train_params['predict_wfile_path']).format(shop_id, batch_id)
     if not os.path.exists(JPEGImages_path):
         os.makedirs(JPEGImages_path)
     else:
@@ -89,6 +89,12 @@ def check_path(shop_id,batch_id,online_batch_id,type):
     else:
         fileutils.remove_path_file(convert_path)
         os.makedirs(convert_path)
+
+    if not os.path.exists(wfile_path):
+        os.makedirs(wfile_path)
+    else:
+        fileutils.remove_path_file(wfile_path)
+        os.makedirs(wfile_path)
 
 def process_train_data(jpg_path,xml_path,shop_id, batch_id,classnames):
     JPEGImages_path = str(config.yolov3_train_params['JPEGImages_path']).format(shop_id, batch_id)
