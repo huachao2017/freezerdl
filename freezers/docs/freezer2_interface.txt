@@ -40,6 +40,6 @@ post入参：json
 
 3、
 curl -X POST \
-  http://bizkf.bigmeddata.com/admin/train_model/add \
+  http://adminkf.bigmeddata.com/v2/admin/training_model/add \
   -H 'Content-Type: application/json' \
-  -d '{"model_id": 1,"complete_time": "","duration": 3,"sku_count": 80,"image_count": 500,"accuracy_rate": "0.98"}'
+  -d '{"model_id": 1,"complete_time": "2020-01-03 11:11:11","duration": 3,"sku_count": 80,"image_count": 500,"accuracy_rate": "0.98", "version": "1.1.1"}'
