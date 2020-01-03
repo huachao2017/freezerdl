@@ -33,6 +33,9 @@ def train(shop_id,batch_id,model, convert_path, input_shape, anchors, num_classe
         lines = f.readlines()
     if type is not None and type == 0:
         np.random.shuffle(lines)
+        epochs = train_params['type_add_echos']
+    else:
+        epochs = train_params['type_all_echos']
     num_val = int(len(lines)*val_split)
     num_train = len(lines) - num_val
     print('Train on {} samples, val on {} samples, with batch size {}.'.format(num_train, num_val, batch_size))
@@ -41,7 +44,7 @@ def train(shop_id,batch_id,model, convert_path, input_shape, anchors, num_classe
                         validation_data=data_generator_wrap(lines[num_train:], batch_size, input_shape, anchors,
                                                             num_classes),
                         validation_steps=max(1, num_val // batch_size),
-                        epochs=train_params['epochs'],initial_epoch=1,callbacks=[logging, checkpoint])
+                        epochs=epochs,initial_epoch=1,callbacks=[logging, checkpoint])
     model.save_weights(model_dir + model_name)
 
 def create_model(input_shape, anchors, num_classes, load_pretrained=True, freeze_body=False,weights_path=None):
