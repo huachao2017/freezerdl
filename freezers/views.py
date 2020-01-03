@@ -119,7 +119,6 @@ class AddTrain(APIView):
             model_id = int(request.query_params['modelid'])
 
             data = request.data
-            print(data)
             TrainRecord.objects.create(
                 group_id=group_id,
                 model_id=model_id,

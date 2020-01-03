@@ -34,14 +34,14 @@ class TrainRecord(models.Model):
     model_id = models.IntegerField()
     upcs = models.TextField()
     datas = models.TextField()
-    pic_cnt = models.IntegerField()
+    pic_cnt = models.IntegerField(default=0)
     type = models.IntegerField(default=0)   # 0:yolov3,
     model_path = models.CharField(max_length=200)
-    params = models.TextField()
+    params = models.TextField(default='')
     status = models.IntegerField()          # 0:排队中，10：正在训练，20：训练结束, 30：训练失败
-    duration = models.IntegerField()        # 训练耗时，小时
-    finish_time = models.DateTimeField()
-    accuracy_rate = models.FloatField()
+    duration = models.IntegerField(null=True)        # 训练耗时，小时
+    finish_time = models.DateTimeField(null=True)
+    accuracy_rate = models.FloatField(null=True)
     create_time = models.DateTimeField('date created', auto_now_add=True)
     update_time = models.DateTimeField('date updated', auto_now=True)
 
