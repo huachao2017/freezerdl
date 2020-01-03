@@ -20,5 +20,5 @@ def IOU (predictBox,Box):
     h = max(0, y2 - y1)
     area = w * h  # C∩G的面积
 
-    iou = float(area) / (carea + garea - area)
+    iou = float(area) / (carea + garea - area+0.0001)
     return iou
