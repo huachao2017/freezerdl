@@ -200,7 +200,7 @@ class MAp():
                 keyCpP = dict(classPrecesions_dict[keyCp])
                 if key in keyCpP:
                     cp+=keyCpP[key]
-            classAveragePrecesion = cp / fileC
+            classAveragePrecesion = cp / (fileC+0.0001)
             classAveragePrecesion_dict[key] = classAveragePrecesion
         return classAveragePrecesion_dict
 
