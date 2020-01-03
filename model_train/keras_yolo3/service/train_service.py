@@ -152,7 +152,7 @@ def save_train_table(group_id, model_id, type,train_los_time=0,val_los_time=0,go
     model_path = os.path.join(str(config.yolov3_train_params['model_dir']).format(group_id,model_id),str("{}_{}.h5").format(group_id,model_id))
     config_param = ''
     if good_config_params != '':
-        accuracy_rate = float(good_config_params['mAP'])
+        accuracy_rate = float(good_config_params['mAp'])
         good_config_params['diff_switch_iou'][0] = True
         good_config_params['single_switch_iou_minscore'][0] = True
         config_param = demjson.encode(good_config_params)
