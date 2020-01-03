@@ -4,8 +4,8 @@ from django.conf import settings
 
 def image_upload_source(instance, filename):
     now = datetime.datetime.now()
-    return '{}/{}/{}/{}/{}_{}_{}'.format(settings.DETECT_DIR_NAME, instance.group_id, now.strftime('%Y%m'),
-                                         now.strftime('%d%H'), now.strftime('%M%S'), str(now.time()), filename)
+    return '{}/{}/{}/{}/{}_{}_{}_{}'.format(settings.DETECT_DIR_NAME, instance.group_id, now.strftime('%Y%m'),
+                                         now.strftime('%d%H'), instance.device_id, now.strftime('%M%S'), str(now.time()), filename)
 
 
 class FreezerImage(models.Model):
