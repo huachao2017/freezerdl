@@ -27,7 +27,8 @@ if __name__ == "__main__":
             cursor_default.execute("select tr.id from freezers_trainrecord as tr left join freezers_onlinemodels as om on tr.model_id=om.model_id where tr.status=20 and om.model_id is null")
             train_records = cursor_default.fetchall()
 
-            for train_record in train_records:
+            for raw_train_record in train_records:
+                train_record = TrainRecord.objects.get(id=raw_train_record[0])
                 try:
                     begin_time = time.time()
 
