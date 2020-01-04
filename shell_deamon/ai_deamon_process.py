@@ -111,7 +111,7 @@ if __name__ == "__main__":
                     subprocess.call(command, shell=True)
 
             # 任务2：轮询训练状态，训练状态表字段表明结束后，拷贝模型，更新数据库
-            cursor_default.execute("select tr.id, td.status, td.model_path, td.accuracy_rate, td.params_config, td.train_los_time from freezers_traindetail as td, freezers_trainrecord as tr where tr.model_id=td.model_id and td.status=1")
+            cursor_default.execute("select tr.id, td.status, td.model_path, td.accuracy_rate, td.params_config, td.train_los_time from freezers_traindetail as td, freezers_trainrecord as tr where tr.model_id=td.model_id and td.status=1 and tr.status=10")
             finish_train_details = cursor_default.fetchall()
             for finish_train_detail in finish_train_details:
                 train_record = TrainRecord.objects.get(id=finish_train_detail[0])
