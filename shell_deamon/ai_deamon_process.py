@@ -26,6 +26,7 @@ class RemoteShell:
         self.pwd = pwd
 
     def put(self, local_path, remote_path):
+        ret = -1
         scp_put = '''  
         set timeout -1
         spawn scp %s %s@%s:%s  
@@ -36,9 +37,12 @@ class RemoteShell:
         } "password:" {send "%s\r"}  
         expect eof  
         exit'''
+        # test os.system("echo '%s' > scp_put.cmd" % (scp_put % (os.path.expanduser('/home/src/freezerdl/manage.py'), 'root', '192.168.1.60', '/home/', 'iShehui', 'iShehui')))
         os.system("echo '%s' > scp_put.cmd" % (scp_put % (os.path.expanduser(local_path), self.user, self.host, remote_path, self.pwd, self.pwd)))
-        os.system('expect scp_put.cmd')
+        ret = os.system('expect scp_put.cmd')
         os.system('rm scp_put.cmd')
+
+        return ret
 
 if __name__ == "__main__":
     while True:
@@ -131,7 +135,9 @@ if __name__ == "__main__":
 
                     # 拷贝模型
                     rs = RemoteShell(config.ai_config["app_host"], config.ai_config["app_user"], config.ai_config["app_password"])
-                    rs.put(ai_model_path, train_record.model_path)
+                    ret = rs.put(ai_model_path, train_record.model_path)
+                    if ret != 0:
+                        raise ValueError('拷贝文件出错！')
 
                     train_record.save()
 
