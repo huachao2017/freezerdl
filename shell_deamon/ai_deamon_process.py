@@ -81,7 +81,7 @@ if __name__ == "__main__":
                     online_models = OnlineModels.objects.filter(status=10).filter(group_id=waiting_record.group_id).all()
                     if len(online_models)>0:
                         type = 1
-                        command = "nohup python3 {}/model_train/keras_yolo3/service/train_service.py --groupid={} --modelid={} --type={} --jpg_path={} --xml_path={} --classnames={} --online_model_id={}    > {}/train.out 2>&1 &".format(
+                        command = "nohup python3 {}/model_train/keras_yolo3/service/train_service.py --groupid={} --modelid={} --type={} --jpg_path={} --xml_path={} --classnames={} --online_model_id={} > {}train.out 2>&1 &".format(
                             settings.BASE_DIR,
                             waiting_record.group_id,
                             waiting_record.model_id,
@@ -94,7 +94,7 @@ if __name__ == "__main__":
                         )
                     else:
                         type = 0
-                        command = "nohup python3 {}/model_train/keras_yolo3/service/train_service.py --groupid={} --modelid={} --type={} --jpg_path={} --xml_path={} --classnames={} --online_model_id={}    > {}/train.out 2>&1 &".format(
+                        command = "nohup python3 {}/model_train/keras_yolo3/service/train_service.py --groupid={} --modelid={} --type={} --jpg_path={} --xml_path={} --classnames={} --online_model_id={} > {}train.out 2>&1 &".format(
                             settings.BASE_DIR,
                             waiting_record.group_id,
                             waiting_record.model_id,
