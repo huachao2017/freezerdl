@@ -38,7 +38,7 @@ def train_service(group_id, model_id, type, jpg_path, xml_path, classnames, onli
         good_config_params,all_config_params = cal_mAp(group_id,model_id,classnames)
         end_time1 = int(time.time())
         # 选择最优的mAp 的参数配置保存数据库
-        save_train_table(group_id, model_id, type,train_los_time = int(end_time-start_time),val_los_time = int(end_time1-end_time),good_config_params= good_config_params,all_config_params = all_config_params,status = 0,des_msg='')
+        save_train_table(group_id, model_id, type,train_los_time = int(end_time-start_time),val_los_time = int(end_time1-end_time),good_config_params= good_config_params,all_config_params = all_config_params,status = 1,des_msg='')
     except Exception as e:
         traceback.print_exc()
         des_msg = "error:e={}".format(e)
