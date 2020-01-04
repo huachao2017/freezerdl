@@ -100,7 +100,7 @@ def _main(class_names,shop_id,batch_id,type,online_batch_id):
     weights_path = None
     if online_batch_id is not None and type==1: # 增量训练
         flag = True
-        weights_path = os.path.join(str(train_params['model_dir']).format(shop_id,batch_id),(str(shop_id)+"_"+str(online_batch_id)+".h5"))
+        weights_path = os.path.join(str(train_params['model_dir']).format(shop_id,online_batch_id),(str(shop_id)+"_"+str(online_batch_id)+".h5"))
     model = create_model(input_shape, anchors, len(class_names),load_pretrained=flag,weights_path=weights_path)
     train(shop_id,batch_id,model, train_params['convert_path'], input_shape, anchors, len(class_names), model_dir=train_params['model_dir'],type=type)
 
