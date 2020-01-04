@@ -75,12 +75,14 @@ if __name__ == "__main__":
                     waiting_record.save()
 
                     log_dir = config.yolov3_train_params['log_dir'].format(waiting_record.group_id, waiting_record.model_id)
+                    shutil.rmtree(log_dir, ignore_errors=True)
+                    os.makedirs(log_dir)
                     # 判断全量和增量
                     online_models = OnlineModels.objects.filter(status=10).filter(group_id=waiting_record.group_id).all()
                     if len(online_models)>0:
                         type = 1
-                        command = "nohup python3 {}/raw/train.py --groupid={} --modelid={} --type={} --jpg_path={} --xml_path={} --classnames={} --online_model_id={}    > {}/train.out 2>&1 &".format(
-                            os.path.join(settings.BASE_DIR, 'dl'),
+                        command = "nohup python3 {}/model_train/train_service.py --groupid={} --modelid={} --type={} --jpg_path={} --xml_path={} --classnames={} --online_model_id={}    > {}/train.out 2>&1 &".format(
+                            settings.BASE_DIR,
                             waiting_record.group_id,
                             waiting_record.model_id,
                             type,
@@ -92,8 +94,8 @@ if __name__ == "__main__":
                         )
                     else:
                         type = 0
-                        command = "nohup python3 {}/raw/train.py --groupid={} --modelid={} --type={} --jpg_path={} --xml_path={} --classnames={} --online_model_id={}    > {}/train.out 2>&1 &".format(
-                            os.path.join(settings.BASE_DIR, 'dl'),
+                        command = "nohup python3 {}/model_train/train_service.py --groupid={} --modelid={} --type={} --jpg_path={} --xml_path={} --classnames={} --online_model_id={}    > {}/train.out 2>&1 &".format(
+                            settings.BASE_DIR,
                             waiting_record.group_id,
                             waiting_record.model_id,
                             type,
@@ -109,7 +111,7 @@ if __name__ == "__main__":
                     subprocess.call(command, shell=True)
 
             # 任务2：轮询训练状态，训练状态表字段表明结束后，拷贝模型，更新数据库
-            cursor_default.execute("select tr.id, td.status, td.model_path, td.accuracy_rate, td.params_config, train_los_time from freezers_traindetail as td left join freezers_trainrecord as tr on tr.model_id=om.model_id where tr.model_id is null")
+            cursor_default.execute("select tr.id, td.status, td.model_path, td.accuracy_rate, td.params_config, td.train_los_time from freezers_traindetail as td, freezers_trainrecord as tr where tr.model_id=td.model_id and td.status=1")
             finish_train_details = cursor_default.fetchall()
             for finish_train_detail in finish_train_details:
                 train_record = TrainRecord.objects.get(id=finish_train_detail[0])
