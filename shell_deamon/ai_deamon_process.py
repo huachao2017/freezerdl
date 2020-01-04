@@ -17,6 +17,7 @@ from django.conf import settings
 from django.db import close_old_connections
 from django.db import connections
 from set_config import config
+from freezers.third_tools import dingtalk
 
 
 class RemoteShell:
@@ -143,6 +144,7 @@ if __name__ == "__main__":
 
         except Exception as e:
             traceback.print_exc()
+            dingtalk.send_message(str(e), 2)
             print('守护进程出现错误：{}'.format(e))
         finally:
             cursor_default.close()

@@ -14,6 +14,7 @@ from freezers.models import OnlineModels, TrainRecord
 from django.db import close_old_connections
 from django.db import connections
 from set_config import config
+from freezers.third_tools import dingtalk
 
 if __name__ == "__main__":
     while True:
@@ -88,6 +89,7 @@ if __name__ == "__main__":
                     print('更新数据库表并发布上线错误：{}'.format(e))
 
         except Exception as e:
+            dingtalk.send_message(str(e), 3)
             print('守护进程出现错误：{}'.format(e))
         finally:
             cursor_default.close()
