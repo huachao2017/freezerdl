@@ -5,9 +5,10 @@
 import os
 import time
 import json
+import shutil
 import traceback
 import urllib.request
-import shell_deamon
+import subprocess
 import main.import_django_settings
 from freezers.models import TrainRecord, OnlineModels
 
@@ -60,6 +61,8 @@ if __name__ == "__main__":
                     img_download_file_dir = config.ai_config["img_download_file_dir_template"].format(waiting_record.group_id, waiting_record.model_id)
                     xml_download_file_dir = config.ai_config["xml_download_file_dir_template"].format(waiting_record.group_id, waiting_record.model_id)
 
+                    shutil.rmtree(img_download_file_dir, ignore_errors=True)
+                    shutil.rmtree(xml_download_file_dir, ignore_errors=True)
                     os.makedirs(img_download_file_dir)
                     os.makedirs(xml_download_file_dir)
                     for file in files:
@@ -103,7 +106,7 @@ if __name__ == "__main__":
 
                     # 启动训练进程
                     print(command)
-                    shell_deamon.call(command, shell=True)
+                    subprocess.call(command, shell=True)
 
             # 任务2：轮询训练状态，训练状态表字段表明结束后，拷贝模型，更新数据库
             cursor_default.execute("select tr.id, td.status, td.model_path, td.accuracy_rate, td.params_config, train_los_time from freezers_traindetail as td left join freezers_trainrecord as tr on tr.model_id=om.model_id where tr.model_id is null")
@@ -131,6 +134,7 @@ if __name__ == "__main__":
                     train_record.save()
 
         except Exception as e:
+            traceback.print_exc()
             print('守护进程出现错误：{}'.format(e))
         finally:
             cursor_default.close()
