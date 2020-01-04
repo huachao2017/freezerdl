@@ -211,6 +211,8 @@ if __name__ == "__main__":
     import json
     args = parse_arguments(sys.argv[1:])
 
+    if args.online_model_id == 0:
+        args.online_model_id = None
     train_service(
         args.groupid,
         args.modelid,
