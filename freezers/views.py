@@ -20,16 +20,16 @@ from model_train.keras_yolo3.yolo3 import yolo
 logger = logging.getLogger("django")
 def start_yolov3_map_models():
     yolov3_ins_map = {}
-    online_models_list = []
-    for online_models in online_models_list:
-        class_names = online_models.upcs
-        diff_switch_iou = dict(json.loads(online_models.params))['diff_switch_iou']
-        single_switch_iou_minscore =  dict(json.loads(online_models.params))['single_switch_iou_minscore']
-        model_path = online_models.model_path
-        iou =  dict(json.loads(online_models.params))['iou']
-        score = dict(json.loads(online_models.params))['score']
+    online_model_list = OnlineModels.objects.filter(status=10)
+    for online_model in online_model_list:
+        class_names = online_model.upcs
+        diff_switch_iou = dict(json.loads(online_model.params))['diff_switch_iou']
+        single_switch_iou_minscore =  dict(json.loads(online_model.params))['single_switch_iou_minscore']
+        model_path = online_model.model_path
+        iou =  dict(json.loads(online_model.params))['iou']
+        score = dict(json.loads(online_model.params))['score']
         yolo_ins = yolo.YOLO(class_names,diff_switch_iou,single_switch_iou_minscore,model_path,iou,score)
-        key = str(online_models.group_id)+"_"+str(online_models.model_id)
+        key = str(online_model.group_id)+"_"+str(online_model.model_id)
         yolov3_ins_map[key] = yolo_ins
     return yolov3_ins_map
 yolov3_inss_map = start_yolov3_map_models()
@@ -85,19 +85,20 @@ class FreezerImageViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, mixins
             return Response(serializer.instance.ret, status=status.HTTP_400_BAD_REQUEST, headers=headers)
 
         online_model = online_models[-1]
-        serializer.instance.ret = []
-        # TODO 调用检测
-        ret = []
-        # if freezer_check_yolov3_switch:
-        #     detect_ret, aiinterval, visual_image_path = yolov3.detect(serializer.instance.source.path)
-        # else:
-        #     detector = freezer2detection.ImageDetectorFactory.get_static_detector('freezer2')
-        #     detect_ret, aiinterval, visual_image_path = detector.detect(serializer.instance.source.path, step1_min_score_thresh=0.3)
+        key = str(online_model.group_id) + "_" + str(online_model.model_id)
+        p_class, p_prob, p_box = yolov3_inss_map[key].predict_img(serializer.instance.source.path)
+        detect_ret = []
+        for i in range(len(p_box)):
+            detect_ret.append(
+                {'class':p_class[i],
+                 'score':p_prob[i],
+                 'xmin':p_box[i][0],'ymin':p_box[i][1],'xmax':p_box[i][2],'ymax':p_box[i][3]
+                 })
 
-        # ret = json.dumps(detect_ret, cls=NumpyEncoder)
-        # serializer.instance.ret = ret
+        ret = json.dumps(detect_ret, cls=NumpyEncoder)
+        serializer.instance.ret = ret
         # serializer.instance.visual = visual_image_path.replace(settings.MEDIA_ROOT,'')
-        # serializer.instance.save()
+        serializer.instance.save()
 
         logger.info('end detect:{}'.format(serializer.instance.deviceid))
         return Response(serializer.instance.ret, status=status.HTTP_201_CREATED, headers=headers)
@@ -122,8 +123,8 @@ class AddTrain(APIView):
             TrainRecord.objects.create(
                 group_id=group_id,
                 model_id=model_id,
-                upcs=json.dumps(data.upcs),
-                datas=json.dumps(data.files),
+                upcs=json.dumps(data["upcs"]),
+                datas=json.dumps(data["files"]),
                 status=0
             )
 

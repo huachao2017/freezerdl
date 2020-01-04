@@ -106,7 +106,7 @@ if __name__ == "__main__":
                     shell_deamon.call(command, shell=True)
 
             # 任务2：轮询训练状态，训练状态表字段表明结束后，拷贝模型，更新数据库
-            cursor_default.execute("select tr.id, td.status, td.model_path, td.accuracy_rate from freezers_traindetail as td left join freezers_trainrecord as tr on tr.model_id=om.model_id where tr.model_id is null")
+            cursor_default.execute("select tr.id, td.status, td.model_path, td.accuracy_rate, td.params_config, train_los_time from freezers_traindetail as td left join freezers_trainrecord as tr on tr.model_id=om.model_id where tr.model_id is null")
             finish_train_details = cursor_default.fetchall()
             for finish_train_detail in finish_train_details:
                 train_record = TrainRecord.objects.get(id=finish_train_detail[0])
@@ -118,8 +118,9 @@ if __name__ == "__main__":
                     ai_model_name = ai_model_path.split('/')[-1]
                     train_record.status = 20
                     train_record.model_path = '{}/{}_{}_{}'.format(config.ai_config["app_models_path"], train_record.group_id, train_record.model_id, ai_model_name)
-                    train_record.duration = 0 # fixme
-                    train_record.finishtime = 0 # fixme
+                    train_record.duration = finish_train_detail[5]
+                    train_record.params = finish_train_detail[4]
+                    train_record.finishtime = '' # fixme
                     train_record.accuracy_rate = finish_train_detail[3]
 
 

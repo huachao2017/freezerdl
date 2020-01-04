@@ -58,18 +58,19 @@ if __name__ == "__main__":
                     os.system('touch /home/src/freezerdl/main/test_settings.py')
 
                     # 通知后台
-                    url = "{}/admin/train_model/add".format(config.app_config["backend_dns"])
+                    url = "{}/v2/admin/training_model/add".format(config.app_config["backend_dns"])
                     headers = {
                         "Accept": "application/json",
                         "Content-Type": "application/json"
                     }
                     json_data = {
                         "model_id":train_record.model_id,
-                        "complete_time":"", # fixme
-                        "duration":"", # fixme
+                        "complete_time":str(train_record.update_time),
+                        "duration":train_record.duration,
                         "sku_count": len(train_record.upcs),
                         "image_count": train_record.pic_cnt,
                         "accuracy_rate": train_record.accuracy_rate,
+                        "version": "1.0.0"
                     }
                     json_info = json.dumps(json_data)
                     data = bytes(json_info, 'utf8')
