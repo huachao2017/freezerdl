@@ -39,8 +39,16 @@ if __name__ == "__main__":
                         online_model.save()
 
                     # 添加数据库表
+                    online_model_dir = "{}/{}".format(config.app_config["online_model_dir"], train_record.group_id)
+                    shutil.rmtree(online_model_dir, ignore_errors=True)
+                    os.makedirs(online_model_dir)
                     type = 0
-                    online_model_path = "{}/{}/{}.{}".format(config.app_config["online_model_dir"], train_record.group_id, type, 'h5')
+                    online_model_path = "{}/{}.{}".format(online_model_dir, type, 'h5')
+
+                    # 拷贝模型
+                    shutil.copy(train_record.model_path, online_model_path)
+
+                    # 更新数据库表
                     OnlineModels.objects.create(
                         group_id = train_record.group_id,
                         model_id = train_record.model_id,
@@ -50,9 +58,6 @@ if __name__ == "__main__":
                         params = "", # fixme
                         status = 10
                     )
-
-                    # 拷贝模型
-                    shutil.copy(train_record.model_path, online_model_path)
 
                     # 发布上线
                     os.system('touch /home/src/freezerdl/main/settings.py')
