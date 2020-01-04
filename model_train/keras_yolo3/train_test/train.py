@@ -33,9 +33,9 @@ def train(shop_id,batch_id,model, convert_path, input_shape, anchors, num_classe
         lines = f.readlines()
     if type is not None and type == 0:
         np.random.shuffle(lines)
-        epochs = train_params['type_add_echos']
-    else:
         epochs = train_params['type_all_echos']
+    else:
+        epochs = train_params['type_add_echos']
     num_val = int(len(lines)*val_split)
     num_train = len(lines) - num_val
     print('Train on {} samples, val on {} samples, with batch size {}.'.format(num_train, num_val, batch_size))
