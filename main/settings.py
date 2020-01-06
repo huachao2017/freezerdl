@@ -103,9 +103,9 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'freezerdl',
-        'USER': 'root',
-        'PASSWORD': 'iShehui',
-        'HOST': '192.168.1.62',
+        'USER': 'freeze',
+        'PASSWORD': 'aifxdetect',
+        'HOST': '47.100.176.178',
         'PORT': '3306',
         'CHARSET': 'utf8',
         'COLLATION': 'utf8_general_ci',

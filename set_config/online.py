@@ -82,7 +82,7 @@ yolov3_predict_params = {
 
 app_config = {
     "online_model_dir": "/data/model/online",
-    "backend_dns": "http://bizkf.bigmeddata.com"
+    "backend_dns": "http://biz.bigmeddata.com"
 }
 
 ai_config = {
