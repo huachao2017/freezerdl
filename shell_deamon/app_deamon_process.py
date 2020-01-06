@@ -56,7 +56,7 @@ if __name__ == "__main__":
                         type = type,
                         model_path = online_model_path,
                         upcs = train_record.upcs,
-                        params = "", # fixme
+                        params = train_record.params,
                         status = 10
                     )
 
