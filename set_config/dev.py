@@ -3,7 +3,7 @@ yolov3_train_params = {
     "Annotations_path":"/data/ai/ai_data/yolov3/VOCdevkit/{}_{}/VOC2007/Annotations/",
     "Main_path":"/data/ai/ai_data/yolov3/VOCdevkit/{}_{}/VOC2007/ImageSets/Main/",
     "model_dir":"/data/ai/yolov3/model/{}_{}/",
-    "log_dir":"/data/ai/yolov3/logs/{}_{}/",
+    "log_dir":"/data/ai/yolov3/logs/{}_{}.log",
     "convert_path":"/data/ai/yolov3/VOCdevkit/{}_{}/VOC2007/Convert/",
     "type_all_echos":100,# 3000
     "type_add_echos":50,# 500
