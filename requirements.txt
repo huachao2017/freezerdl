@@ -1,3 +1,4 @@
+fablic3
 django<=1.11.7
 djangorestframework
 django-filter
@@ -6,3 +7,4 @@ opencv_python<=3.4.2.16
 opencv-contrib-python
 demjson
 django-cors-headers
+mysqlclient
