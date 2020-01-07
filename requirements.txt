@@ -3,8 +3,7 @@ djangorestframework
 django-filter
 django-crontab
 opencv_python<=3.4.2.16
-mysqlclient
 opencv-contrib-python
 demjson
 django-cors-headers
-
+mysqlclient
