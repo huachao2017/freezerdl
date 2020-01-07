@@ -7,4 +7,5 @@ opencv_python<=3.4.2.16
 opencv-contrib-python
 demjson
 django-cors-headers
+keras==2.2.0
 mysqlclient

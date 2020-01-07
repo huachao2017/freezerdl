@@ -1,0 +1,14 @@
+1、先装好tensorflow
+2、安装工具
+yum -y install expect
+yum -y install mariadb-server mariadb mariadb-devel
+3、pip install -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple
+4、如cv2缺少包
+    4.1、使用如下命令查看缺少得共享库
+    yum whatprovides libSM.so.6
+    4.2、使用以下命令解决缺少的共享库（安装缺少的共享库）
+    yum install libSM-1.2.2-2.el7.x86_64 --setopt=protected_multilib=false
+
+5、app需要添加目录
+mkdir /data/model/bak
+mkdir /home/src/freezerdl/logs
