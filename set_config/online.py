@@ -89,7 +89,7 @@ ai_config = {
     "img_download_file_dir_template": "/data/downloads/{}_{}/imgs/",
     "xml_download_file_dir_template": "/data/downloads/{}_{}/xmls/",
     "app_models_path": "/data/model/bak",
-    "app_host": "192.168.1.62",
+    "app_host": "101.133.133.221",
     "app_user": "root",
-    "app_password": "iShehui",
+    "app_password": "megex007$",
 }
