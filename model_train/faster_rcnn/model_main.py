@@ -26,11 +26,11 @@ from object_detection import model_hparams
 from object_detection import model_lib
 
 flags.DEFINE_string(
-    'model_dir', None, 'Path to output model directory '
+    'model_dir', '/home/src/trained_model/faster_rcnn_nas_coco_2018_01_28', 'Path to output model directory '
     'where event and checkpoint files will be written.')
-flags.DEFINE_string('pipeline_config_path', None, 'Path to pipeline config '
+flags.DEFINE_string('pipeline_config_path', '/home/src/freezerdl/model_train/pipeline.config', 'Path to pipeline config '
                     'file.')
-flags.DEFINE_integer('num_train_steps', None, 'Number of train steps.')
+flags.DEFINE_integer('num_train_steps', 10000, 'Number of train steps.')
 flags.DEFINE_boolean('eval_training_data', False,
                      'If training data should be evaluated for this job. Note '
                      'that one call only use this in eval-only mode, and '
@@ -46,7 +46,7 @@ flags.DEFINE_string(
     'represented as a string containing comma-separated '
     'hparam_name=value pairs.')
 flags.DEFINE_string(
-    'checkpoint_dir', None, 'Path to directory holding a checkpoint.  If '
+    'checkpoint_dir', '/home/src/trained_model/faster_rcnn_nas_coco_2018_01_28', 'Path to directory holding a checkpoint.  If '
     '`checkpoint_dir` is provided, this binary operates in eval-only mode, '
     'writing resulting metrics to `model_dir`.')
 flags.DEFINE_boolean(
