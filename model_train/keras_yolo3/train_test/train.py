@@ -24,7 +24,7 @@ def train(shop_id,batch_id,model, convert_path, input_shape, anchors, num_classe
     logging = TensorBoard(log_dir=model_dir)
     model_name = str(shop_id)+"_"+str(batch_id)+".h5"
     checkpoint = ModelCheckpoint(os.path.join(model_dir , model_name),monitor = 'val_loss',
-                                 save_weights_only=True, save_best_only=True, period=1)
+                                 save_weights_only=True, save_best_only=True, period=2)
     batch_size = 15
     val_split = 0.3
     convert_path = str(convert_path).format(shop_id,batch_id)
