@@ -86,7 +86,7 @@ if __name__ == "__main__":
                     online_models = OnlineModels.objects.filter(status=10).filter(group_id=waiting_record.group_id).all()
                     if len(online_models)>0:
                         type = 1
-                        command = "nohup python3 {}/model_train/keras_yolo3/service/train_service.py --groupid={} --modelid={} --type={} --jpg_path={} --xml_path={} --classnames={} --online_model_id={} > {}train.out 2>&1 &".format(
+                        command = "nohup python3 {}/model_train/keras_yolo3/service/train_service.py --groupid={} --modelid={} --type={} --jpg_path={} --xml_path={} --classnames='{}' --online_model_id={} > {}train.out 2>&1 &".format(
                             settings.BASE_DIR,
                             waiting_record.group_id,
                             waiting_record.model_id,
@@ -99,7 +99,7 @@ if __name__ == "__main__":
                         )
                     else:
                         type = 0
-                        command = "nohup python3 {}/model_train/keras_yolo3/service/train_service.py --groupid={} --modelid={} --type={} --jpg_path={} --xml_path={} --classnames={} --online_model_id={} > {}train.out 2>&1 &".format(
+                        command = "nohup python3 {}/model_train/keras_yolo3/service/train_service.py --groupid={} --modelid={} --type={} --jpg_path={} --xml_path={} --classnames='{}' --online_model_id={} > {}train.out 2>&1 &".format(
                             settings.BASE_DIR,
                             waiting_record.group_id,
                             waiting_record.model_id,
@@ -116,7 +116,7 @@ if __name__ == "__main__":
                     subprocess.call(command, shell=True)
 
             # 任务2：轮询训练状态，训练状态表字段表明结束后，拷贝模型，更新数据库
-            cursor_default.execute("select tr.id, td.status, td.model_path, td.accuracy_rate, td.params_config, td.train_los_time from freezers_traindetail as td, freezers_trainrecord as tr where tr.model_id=td.model_id and td.status=1 and tr.status=10")
+            cursor_default.execute("select tr.id, td.status, td.model_path, td.accuracy_rate, td.params_config, td.train_los_time from freezers_traindetail as td, freezers_trainrecord as tr where tr.group_id = td.group_id and tr.model_id=td.model_id and td.status=1 and tr.status=10")
             finish_train_details = cursor_default.fetchall()
             for finish_train_detail in finish_train_details:
                 train_record = TrainRecord.objects.get(id=finish_train_detail[0])
