@@ -110,7 +110,7 @@ class FreezerImageViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, mixins
             vis_util.visualize_boxes_and_labels_on_image_array(
                 image_np,
                 np.array(p_box),
-                np.array(p_class).astype(np.int32),
+                np.array(p_class),
                 np.array(p_prob),
                 yolov3_inss_map[key].class_names,
                 use_normalized_coordinates=False,

@@ -10,9 +10,9 @@ if __name__ == "__main__":
     vis_util.visualize_boxes_and_labels_on_image_array(
         image_np,
         np.array([[1,1,100,100],]),
-        np.array([1,]),
+        np.array(['6576431987657',]),
         np.array([0.88,]),
-        [1,2],
+        ['6576431987657','6576431987659'],
         use_normalized_coordinates=False,
         max_boxes_to_draw=None,
         min_score_thresh=0,

@@ -526,6 +526,7 @@ def visualize_boxes_and_labels_on_image_array(
   if not max_boxes_to_draw:
     max_boxes_to_draw = boxes.shape[0]
   for i in range(min(max_boxes_to_draw, boxes.shape[0])):
+    class_index = 0
     if scores is None or scores[i] > min_score_thresh:
       box = tuple(boxes[i].tolist())
       if instance_masks is not None:
@@ -542,7 +543,11 @@ def visualize_boxes_and_labels_on_image_array(
         display_str = ''
         if not skip_labels:
           if not agnostic_mode:
-            class_name = classes[i]
+            if classes[i] in classnames:
+              class_name = classes[i]
+              class_index = classnames.index(classes[i])
+            else:
+              class_name = 'N/A'
             display_str = str(class_name)
         if not skip_scores:
           if not display_str:
@@ -563,7 +568,7 @@ def visualize_boxes_and_labels_on_image_array(
               (prime_multipler * track_ids[i]) % len(STANDARD_COLORS)]
         else:
           box_to_color_map[box] = STANDARD_COLORS[
-              classes[i] % len(STANDARD_COLORS)]
+              class_index % len(STANDARD_COLORS)]
 
   # Draw all boxes onto image.
   for box, color in box_to_color_map.items():
