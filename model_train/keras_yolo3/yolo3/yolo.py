@@ -35,6 +35,13 @@ class YOLO(object):
         :param iou:  线上模型配置 iou
         :param score:  线上模型阈值
         """
+        print ("class_names"+str(class_names))
+        print ("diff_switch_iou"+str(diff_switch_iou))
+        print ("single_switch_iou_minscore"+str(single_switch_iou_minscore))
+        print ("model_path"+str(model_path))
+        print ("iou"+str(iou))
+        print ("score"+str(score))
+
         config = tf.ConfigProto()
         config.gpu_options.allocator_type = 'BFC'  # A "Best-fit with coalescing" algorithm, simplified from a version of dlmalloc.
         config.gpu_options.per_process_gpu_memory_fraction = 0.1
