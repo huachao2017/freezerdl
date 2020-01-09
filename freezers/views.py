@@ -81,13 +81,14 @@ class FreezerImageViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, mixins
         headers = self.get_success_headers(serializer.data)
 
         logger.info('begin detect:{}, {},{}'.format(serializer.instance.group_id, serializer.instance.device_id, serializer.instance.source.path))
-        online_models = OnlineModels.objects.filter(group_id=serializer.instance.group_id).filter(status=10).all()
-        if len(online_models) < 1:
+
+        try:
+            online_model = OnlineModels.objects.filter(group_id=serializer.instance.group_id).filter(status=10).order_by('-id')[0]
+        except:
             serializer.instance.ret = 'model is not ready'
             serializer.instance.save()
             return Response(serializer.instance.ret, status=status.HTTP_400_BAD_REQUEST, headers=headers)
 
-        online_model = online_models[-1]
         key = str(online_model.group_id) + "_" + str(online_model.model_id)
 
         image_np = cv2.imread(serializer.instance.source.path)
