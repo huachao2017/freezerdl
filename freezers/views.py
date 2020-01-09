@@ -25,7 +25,7 @@ def start_yolov3_map_models():
     yolov3_ins_map = {}
     online_model_list = OnlineModels.objects.filter(status=10)
     for online_model in online_model_list:
-        class_names = online_model.upcs
+        class_names = json.loads(online_model.upcs)
         diff_switch_iou = dict(json.loads(online_model.params))['diff_switch_iou']
         single_switch_iou_minscore =  dict(json.loads(online_model.params))['single_switch_iou_minscore']
         model_path = online_model.model_path
