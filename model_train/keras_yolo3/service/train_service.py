@@ -74,11 +74,12 @@ def check_path(shop_id,batch_id,online_batch_id,type):
     else:
         fileutils.remove_path_file(Main_path)
         os.makedirs(Main_path)
-    if not os.path.exists(model_dir):
-        os.makedirs(model_dir)
-    else:
-        fileutils.remove_path_file(model_dir)
-        os.makedirs(model_dir)
+    if type == 0:
+        if not os.path.exists(model_dir):
+            os.makedirs(model_dir)
+        else:
+            fileutils.remove_path_file(model_dir)
+            os.makedirs(model_dir)
     # if not os.path.exists(log_dir):
     #     os.makedirs(log_dir)
     # else:
