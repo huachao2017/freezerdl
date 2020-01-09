@@ -132,6 +132,6 @@ class AddTrain(APIView):
             return Response(status=status.HTTP_200_OK)
 
         except Exception as e:
-            logger.error('OrderConfirm error:{}'.format(e))
+            logger.error('AddTrain error:{}'.format(e))
             traceback.print_exc()
             return Response(-1, status=status.HTTP_400_BAD_REQUEST)
