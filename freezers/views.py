@@ -13,9 +13,12 @@ from .serializers import *
 from django.conf import settings
 import urllib.request
 import urllib.parse
+
+import cv2
+from PIL import Image
 import requests
 import traceback
-from django.db import connections
+from freezers.third_tools import visualization_utils as vis_util
 from model_train.keras_yolo3.yolo3 import yolo
 logger = logging.getLogger("django")
 def start_yolov3_map_models():
@@ -86,7 +89,9 @@ class FreezerImageViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, mixins
 
         online_model = online_models[-1]
         key = str(online_model.group_id) + "_" + str(online_model.model_id)
-        p_class, p_prob, p_box = yolov3_inss_map[key].predict_img(serializer.instance.source.path)
+
+        image_np = cv2.imread(serializer.instance.source.path)
+        p_class, p_prob, p_box = yolov3_inss_map[key].predict_img(image_np)
         detect_ret = []
         for i in range(len(p_box)):
             detect_ret.append(
@@ -97,7 +102,24 @@ class FreezerImageViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, mixins
 
         ret = json.dumps(detect_ret, cls=NumpyEncoder)
         serializer.instance.ret = ret
-        # serializer.instance.visual = visual_image_path.replace(settings.MEDIA_ROOT,'')
+        if len(p_box) > 0:
+            image_path = serializer.instance.source.path
+            image_dir = os.path.dirname(image_path)
+            visual_image_path = os.path.join(image_dir, 'visual_' + os.path.split(image_path)[-1])
+            vis_util.visualize_boxes_and_labels_on_image_array(
+                image_np,
+                np.array(p_box),
+                np.array(p_class).astype(np.int32),
+                np.array(p_prob),
+                yolov3_inss_map[key].class_names,
+                use_normalized_coordinates=True,
+                max_boxes_to_draw=None,
+                min_score_thresh=yolov3_inss_map[key].score,
+                line_thickness=4)
+            output_image = Image.fromarray(image_np)
+            # output_image.thumbnail((int(im_width), int(im_height)), Image.ANTIALIAS)
+            output_image.save(visual_image_path)
+            serializer.instance.visual = visual_image_path.replace(settings.MEDIA_ROOT,'')
         serializer.instance.save()
 
         logger.info('end detect:{}'.format(serializer.instance.deviceid))

@@ -461,7 +461,7 @@ def visualize_boxes_and_labels_on_image_array(
     boxes,
     classes,
     scores,
-    category_index,
+    classnames,
     instance_masks=None,
     instance_boundaries=None,
     keypoints=None,
@@ -488,8 +488,7 @@ def visualize_boxes_and_labels_on_image_array(
     scores: a numpy array of shape [N] or None.  If scores=None, then
       this function assumes that the boxes to be plotted are groundtruth
       boxes and plot all boxes as black with no classes or scores.
-    category_index: a dict containing category dictionaries (each holding
-      category index `id` and category name `name`) keyed by category indices.
+    classnames: a list for classnames.
     instance_masks: a numpy array of shape [N, image_height, image_width] with
       values ranging between 0 and 1, can be None.
     instance_boundaries: a numpy array of shape [N, image_height, image_width]
@@ -543,8 +542,8 @@ def visualize_boxes_and_labels_on_image_array(
         display_str = ''
         if not skip_labels:
           if not agnostic_mode:
-            if classes[i] in six.viewkeys(category_index):
-              class_name = category_index[classes[i]]['name']
+            if classes[i] in classnames:
+              class_name = classes[i]
             else:
               class_name = 'N/A'
             display_str = str(class_name)
