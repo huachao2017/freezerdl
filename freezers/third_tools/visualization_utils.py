@@ -542,10 +542,7 @@ def visualize_boxes_and_labels_on_image_array(
         display_str = ''
         if not skip_labels:
           if not agnostic_mode:
-            if classes[i] in classnames:
-              class_name = classes[i]
-            else:
-              class_name = 'N/A'
+            class_name = classes[i]
             display_str = str(class_name)
         if not skip_scores:
           if not display_str:
