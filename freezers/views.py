@@ -123,7 +123,7 @@ class FreezerImageViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, mixins
             serializer.instance.visual = visual_image_path.replace(settings.MEDIA_ROOT,'')
         serializer.instance.save()
 
-        logger.info('end detect:{}'.format(serializer.instance.deviceid))
+        logger.info('end detect:{}'.format(serializer.instance.device_id))
         return Response(serializer.instance.ret, status=status.HTTP_201_CREATED, headers=headers)
 
 class OnlineModelsViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, mixins.RetrieveModelMixin,
