@@ -15,6 +15,7 @@ from django.db import close_old_connections
 from django.db import connections
 from set_config import config
 from freezers.third_tools import dingtalk
+from django.conf import settings
 
 if __name__ == "__main__":
     while True:
@@ -61,8 +62,10 @@ if __name__ == "__main__":
                     )
 
                     # 发布上线
-                    os.system('touch /home/src/freezerdl/main/settings.py')
-                    os.system('touch /home/src/freezerdl/main/test_settings.py')
+                    if settings.IS_TEST_SERVER:
+                        os.system('touch {}/main/test_settings.py'.format(settings.BASE_DIR))
+                    else:
+                        os.system('touch{}/main/settings.py'.format(settings.BASE_DIR))
 
                     # 通知后台
                     url = "{}/v2/admin/training_model/add".format(config.app_config["backend_dns"])
