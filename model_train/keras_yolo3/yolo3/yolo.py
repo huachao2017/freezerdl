@@ -200,7 +200,7 @@ class YOLO(object):
             feed_dict={
                 self.yolo_model.input: image_data,
                 self.input_image_shape: [image.size[1], image.size[0]],
-                K.learning_phase(): 0
+                #K.learning_phase(): 0
             })
         print('Found {} boxes for {}'.format(len(out_boxes), 'img'))
         p_class = []
