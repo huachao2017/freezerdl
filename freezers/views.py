@@ -81,7 +81,7 @@ class FreezerImageViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, mixins
         headers = self.get_success_headers(serializer.data)
 
         logger.info('begin detect:{}, {},{}'.format(serializer.instance.group_id, serializer.instance.device_id, serializer.instance.source.path))
-        online_models = OnlineModels.objects.filter(group_id=serializer.instance.group_id).filter(status=10)
+        online_models = OnlineModels.objects.filter(group_id=serializer.instance.group_id).filter(status=10).all()
         if len(online_models) < 1:
             serializer.instance.ret = 'model is not ready'
             serializer.instance.save()
