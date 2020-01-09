@@ -113,7 +113,7 @@ class FreezerImageViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, mixins
                 np.array(p_class).astype(np.int32),
                 np.array(p_prob),
                 yolov3_inss_map[key].class_names,
-                use_normalized_coordinates=True,
+                use_normalized_coordinates=False,
                 max_boxes_to_draw=None,
                 min_score_thresh=yolov3_inss_map[key].score,
                 line_thickness=4)
