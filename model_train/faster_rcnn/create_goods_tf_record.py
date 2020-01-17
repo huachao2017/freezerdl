@@ -81,7 +81,6 @@ def dict_to_tf_example(data,
       ValueError: if the image pointed to by data['filename'] is not a valid JPEG
     """
     img_path = example
-    print('img_path',img_path)
     with tf.gfile.GFile(img_path, 'rb') as fid:
         encoded_jpg = fid.read()
     encoded_jpg_io = io.BytesIO(encoded_jpg)
@@ -115,7 +114,11 @@ def dict_to_tf_example(data,
         ymax.append(float(obj['bndbox']['ymax']) / height)
         class_name = obj['name']
         classes_text.append(class_name.encode('utf8'))
-        classes.append(label_map_dict[class_name])
+        try:
+            classes.append(label_map_dict[class_name])
+        except Exception as e:
+            print("{}报错：{}".format(e,img_path))
+            continue
         truncated.append(int(obj['truncated']))
         poses.append(obj['pose'].encode('utf8'))
 
