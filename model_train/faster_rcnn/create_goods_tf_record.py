@@ -245,7 +245,7 @@ def prepare_train(data_dir, train_output_path, class_nums = 6):
     label_map_dict = {}
     class_names = []
     for i in range(class_nums):
-        label_map_dict[str(i+1)] = i+1
+        label_map_dict[str(i+101)] = i+1
         class_names.append(str(i+1))
     train_examples = normal_examples_list
 
