@@ -146,7 +146,7 @@ class MulitImage(APIView):
             logger.info(request.FILES)
 
             for image in request.FILES.getlist('file'):
-                print(image)
+                logger.info(image)
 
             return Response(status=status.HTTP_200_OK)
 

@@ -72,7 +72,7 @@ post入参：
 
 curl -X POST \
   http://freezerai.fastxbox.cn/api/mulitimage?groupid=1\&modelid=1 \
-  -F "1.jpg=@1.jpg" -F "2.jpg=@2.jpg" -F "3.jpg=@3.jpg"
+  -F "file=@1.jpg" -F "file=@2.jpg" -F "file=@3.jpg"
 
 
 3、提交训练数据接口(post)：http://$dns$/api/addtrain?groupid=xx&modelid=xx
