@@ -6,7 +6,7 @@ yolov3_train_params = {
     "log_dir":"/data/ai/yolov3/logs/{}_{}/",
     "convert_path":"/data/ai/yolov3/VOCdevkit/{}_{}/VOC2007/Convert/",
     "type_all_echos":3000,# 3000
-    "type_add_echos":800,# 500
+    "type_add_echos":1500,# 500
     "predict_wfile":"/data/ai/yolov3/model/{}_{}/wfile_{}.txt",
     "default_config_params":{
         "1-1":{
