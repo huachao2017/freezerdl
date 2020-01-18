@@ -26,54 +26,54 @@ yolov3_train_params = {
             "diff_switch_iou": (False, 0.6),
             "single_switch_iou_minscore": (False, 0.0, 0.28)
         },
-        # "2-1": {
-        #     'Ap': '',
-        #     'mAp': 0,
-        #     'score': 0.2,
-        #     'iou': 0.45,
-        #     "diff_switch_iou": (True, 0.6),
-        #     "single_switch_iou_minscore": (True, 0.0, 0.28)
-        # },
-        # "2-2": {
-        #     'Ap': '',
-        #     'mAp': 0,
-        #     'score': 0.2,
-        #     'iou': 0.45,
-        #     "diff_switch_iou": (False, 0.6),
-        #     "single_switch_iou_minscore": (False, 0.0, 0.28)
-        # },
-        # "3-1": {
-        #     'Ap': '',
-        #     'mAp': 0,
-        #     'score': 0.3,
-        #     'iou': 0.45,
-        #     "diff_switch_iou": (True, 0.6),
-        #     "single_switch_iou_minscore": (True, 0.0, 0.28)
-        # },
-        # "3-2":{
-        #     'Ap': '',
-        #     'mAp': 0,
-        #     'score': 0.3,
-        #     'iou': 0.45,
-        #     "diff_switch_iou": (False, 0.6),
-        #     "single_switch_iou_minscore": (False, 0.0, 0.28)
-        # },
-        # "4-1": {
-        #     'Ap': '',
-        #     'mAp': 0,
-        #     'score': 0.35,
-        #     'iou': 0.45,
-        #     "diff_switch_iou": (True, 0.6),
-        #     "single_switch_iou_minscore": (True, 0.0, 0.38)
-        # },
-        # "4-2": {
-        #     'Ap': '',
-        #     'mAp': 0,
-        #     'score': 0.35,
-        #     'iou': 0.45,
-        #     "diff_switch_iou": (False, 0.6),
-        #     "single_switch_iou_minscore": (False, 0.0, 0.38)
-        # },
+        "2-1": {
+            'Ap': '',
+            'mAp': 0,
+            'score': 0.2,
+            'iou': 0.45,
+            "diff_switch_iou": (True, 0.6),
+            "single_switch_iou_minscore": (True, 0.0, 0.28)
+        },
+        "2-2": {
+            'Ap': '',
+            'mAp': 0,
+            'score': 0.2,
+            'iou': 0.45,
+            "diff_switch_iou": (False, 0.6),
+            "single_switch_iou_minscore": (False, 0.0, 0.28)
+        },
+        "3-1": {
+            'Ap': '',
+            'mAp': 0,
+            'score': 0.3,
+            'iou': 0.45,
+            "diff_switch_iou": (True, 0.6),
+            "single_switch_iou_minscore": (True, 0.0, 0.28)
+        },
+        "3-2":{
+            'Ap': '',
+            'mAp': 0,
+            'score': 0.3,
+            'iou': 0.45,
+            "diff_switch_iou": (False, 0.6),
+            "single_switch_iou_minscore": (False, 0.0, 0.28)
+        },
+        "4-1": {
+            'Ap': '',
+            'mAp': 0,
+            'score': 0.35,
+            'iou': 0.45,
+            "diff_switch_iou": (True, 0.6),
+            "single_switch_iou_minscore": (True, 0.0, 0.38)
+        },
+        "4-2": {
+            'Ap': '',
+            'mAp': 0,
+            'score': 0.35,
+            'iou': 0.45,
+            "diff_switch_iou": (False, 0.6),
+            "single_switch_iou_minscore": (False, 0.0, 0.38)
+        },
     },
 }
 
