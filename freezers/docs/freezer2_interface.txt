@@ -23,7 +23,60 @@ deviceid string，设备id
     }
 ]
 
-2、提交训练数据接口(post)：http://$dns$/api/addtrain?groupid=xx&modelid=xx
+2、多图片检测图片接口(post)：http://$dns$/api/mulitimage?groupid=xx&modelid=xx
+post入参：
+filenames  "a,b,c"
+a file
+b file
+c file
+返回201：
+{
+    'a':[
+        {
+            "class": 2,                           -- 检测类型 1至12
+            "score": 0.5095015168190002,          -- 检测可能性评分
+            "xmin": 37,                           -- 左上角横坐标
+            "ymin": 116,                          -- 左上角纵坐标
+            "xmax": 855,                          -- 右下角横坐标
+            "ymax": 940                           -- 右下角纵坐标
+        },
+        {
+            "class": 3,                           -- 检测类型 1至12
+            "score": 0.5095015168190002,          -- 检测可能性评分
+            "xmin": 37,                           -- 左上角横坐标
+            "ymin": 116,                          -- 左上角纵坐标
+            "xmax": 855,                          -- 右下角横坐标
+            "ymax": 940                           -- 右下角纵坐标
+        }
+    ],
+    'b':[
+        {
+            "class": 2,                           -- 检测类型 1至12
+            "score": 0.5095015168190002,          -- 检测可能性评分
+            "xmin": 37,                           -- 左上角横坐标
+            "ymin": 116,                          -- 左上角纵坐标
+            "xmax": 855,                          -- 右下角横坐标
+            "ymax": 940                           -- 右下角纵坐标
+        }
+    ],
+    'c':[
+        {
+            "class": 2,                           -- 检测类型 1至12
+            "score": 0.5095015168190002,          -- 检测可能性评分
+            "xmin": 37,                           -- 左上角横坐标
+            "ymin": 116,                          -- 左上角纵坐标
+            "xmax": 855,                          -- 右下角横坐标
+            "ymax": 940                           -- 右下角纵坐标
+        }
+    ],
+}
+
+curl -X POST \
+  http://freezerai.fastxbox.cn/api/mulitimage?groupid=1\&modelid=1 \
+  -F "filenames=a,b,c" -F "a=@1.jpg" -F "b=@2.jpg" -F "c=@3.jpg"
+
+
+3、提交训练数据接口(post)：http://$dns$/api/addtrain?groupid=xx&modelid=xx
 post入参：json
 {
     "upcs":["6921168","6921169" ],  -- 对应xml文件里的类别
@@ -43,7 +96,7 @@ curl -X POST \
   -d '{"upcs":["6921168","6921169"],"files":[{"image":"a","xml":"b"},{"image":"a","xml":"b"}]}'
 
 
-3、
+4、训练完成，通知中亚后台接口
 curl -X POST \
   http://adminkf.bigmeddata.com/v2/admin/training_model/add \
   -H 'Content-Type: application/json' \

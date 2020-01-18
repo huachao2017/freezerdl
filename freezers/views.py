@@ -136,6 +136,22 @@ class TrainRecordViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, mixins.
     queryset = TrainRecord.objects.order_by('-id')
     serializer_class = TrainRecordSerializer
 
+
+class MulitImage(APIView):
+    def post(self, request):
+        try:
+            group_id = int(request.query_params['groupid'])
+            model_id = int(request.query_params['modelid'])
+
+            logger.info(request.data)
+
+            return Response(status=status.HTTP_200_OK)
+
+        except Exception as e:
+            logger.error('AddTrain error:{}'.format(e))
+            traceback.print_exc()
+            return Response(-1, status=status.HTTP_400_BAD_REQUEST)
+
 class AddTrain(APIView):
     def post(self, request):
         try:
