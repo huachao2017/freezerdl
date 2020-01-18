@@ -13,6 +13,9 @@ from .serializers import *
 from django.conf import settings
 import urllib.request
 import urllib.parse
+from django.core.files.storage import default_storage
+from django.core.files.base import ContentFile
+import datetime
 
 import cv2
 from PIL import Image
@@ -80,8 +83,6 @@ class FreezerImageViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, mixins
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
 
-        logger.info('begin detect:{}, {},{}'.format(serializer.instance.group_id, serializer.instance.device_id, serializer.instance.source.path))
-
         try:
             online_model = OnlineModels.objects.filter(group_id=serializer.instance.group_id).filter(status=10).order_by('-id')[0]
         except:
@@ -91,40 +92,44 @@ class FreezerImageViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, mixins
 
         key = str(online_model.group_id) + "_" + str(online_model.model_id)
 
-        image_np = cv2.imread(serializer.instance.source.path)
-        p_class, p_prob, p_box = yolov3_inss_map[key].predict_img(image_np)
-        detect_ret = []
-        for i in range(len(p_box)):
-            detect_ret.append(
-                {'class':p_class[i],
-                 'score':p_prob[i],
-                 'xmin':p_box[i][0],'ymin':p_box[i][1],'xmax':p_box[i][2],'ymax':p_box[i][3]
-                 })
+        ret = detect_one_image(key, serializer.instance.source.path, serializer.instance)
 
-        ret = json.dumps(detect_ret, cls=NumpyEncoder)
-        serializer.instance.ret = ret
-        if len(p_box) > 0:
-            image_path = serializer.instance.source.path
-            image_dir = os.path.dirname(image_path)
-            visual_image_path = os.path.join(image_dir, 'visual_' + os.path.split(image_path)[-1])
-            vis_util.visualize_boxes_and_labels_on_image_array(
-                image_np,
-                np.array(p_box),
-                np.array(p_class),
-                np.array(p_prob),
-                yolov3_inss_map[key].class_names,
-                use_normalized_coordinates=False,
-                max_boxes_to_draw=None,
-                min_score_thresh=yolov3_inss_map[key].score,
-                line_thickness=4)
-            output_image = Image.fromarray(image_np)
-            # output_image.thumbnail((int(im_width), int(im_height)), Image.ANTIALIAS)
-            output_image.save(visual_image_path)
-            serializer.instance.visual = visual_image_path.replace(settings.MEDIA_ROOT,'')
-        serializer.instance.save()
+        return Response(ret, status=status.HTTP_201_CREATED, headers=headers)
 
-        logger.info('end detect:{}'.format(serializer.instance.device_id))
-        return Response(serializer.instance.ret, status=status.HTTP_201_CREATED, headers=headers)
+def detect_one_image(key, image_path, image_object):
+    logger.info('begin detect image:{}'.format(image_path))
+    image_np = cv2.imread(image_path)
+    p_class, p_prob, p_box = yolov3_inss_map[key].predict_img(image_np)
+    detect_ret = []
+    for i in range(len(p_box)):
+        detect_ret.append(
+            {'class': p_class[i],
+             'score': p_prob[i],
+             'xmin': p_box[i][0], 'ymin': p_box[i][1], 'xmax': p_box[i][2], 'ymax': p_box[i][3]
+             })
+    ret = json.dumps(detect_ret, cls=NumpyEncoder)
+    image_object.ret = ret
+    if len(p_box) > 0:
+        image_dir = os.path.dirname(image_path)
+        visual_image_path = os.path.join(image_dir, 'visual_' + os.path.split(image_path)[-1])
+        vis_util.visualize_boxes_and_labels_on_image_array(
+            image_np,
+            np.array(p_box),
+            np.array(p_class),
+            np.array(p_prob),
+            yolov3_inss_map[key].class_names,
+            use_normalized_coordinates=False,
+            max_boxes_to_draw=None,
+            min_score_thresh=yolov3_inss_map[key].score,
+            line_thickness=4)
+        output_image = Image.fromarray(image_np)
+        # output_image.thumbnail((int(im_width), int(im_height)), Image.ANTIALIAS)
+        output_image.save(visual_image_path)
+        image_object.visual = visual_image_path.replace(settings.MEDIA_ROOT, '')
+    image_object.save()
+    logger.info('end detect image:{}'.format(image_path))
+    return ret
+
 
 class OnlineModelsViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, mixins.RetrieveModelMixin,
                           viewsets.GenericViewSet):
@@ -144,11 +149,32 @@ class MulitImage(APIView):
             model_id = int(request.query_params['modelid'])
 
             logger.info(request.FILES)
+            try:
+                online_model = OnlineModels.objects.filter(group_id=group_id).filter(status=10).order_by('-id')[0]
+            except:
+                return Response('model is not ready', status=status.HTTP_400_BAD_REQUEST)
+            key = str(online_model.group_id) + "_" + str(online_model.model_id)
+            ret = {}
 
+            now = datetime.datetime.now()
             for image in request.FILES.getlist('file'):
+                # TODO image.name需要测试
+                # TODO image.read()需要测试
+                source = '{}/{}/{}/{}_{}_{}_{}'.format(settings.DETECT_DIR_NAME, group_id, now.strftime('%Y%m'),
+                                                       now.strftime('%d%H'), now.strftime('%M%S'),
+                                                       str(now.time()), image.name)
                 logger.info(image)
+                image_object = FreezerImage.objects.create(
+                    group_id=group_id,
+                    model_id=model_id,
+                    source=source
+                )
+                path = default_storage.save(source, ContentFile(image.read()))
+                image_path = os.path.join(settings.MEDIA_ROOT, path)
+                one_ret = detect_one_image(key, image_path, image_object)
+                ret[image.name] = one_ret
 
-            return Response(status=status.HTTP_200_OK)
+            return Response(ret, status=status.HTTP_201_CREATED)
 
         except Exception as e:
             logger.error('MulitImage error:{}'.format(e))
