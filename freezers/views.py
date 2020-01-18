@@ -145,14 +145,13 @@ class MulitImage(APIView):
 
             logger.info(request.FILES)
 
-            for image_name in request.FILES.keys():
-                print(image_name)
-                print(request.FILES[image_name][0])
+            for image in request.FILES.getlist('file'):
+                print(image)
 
             return Response(status=status.HTTP_200_OK)
 
         except Exception as e:
-            logger.error('AddTrain error:{}'.format(e))
+            logger.error('MulitImage error:{}'.format(e))
             traceback.print_exc()
             return Response(-1, status=status.HTTP_400_BAD_REQUEST)
 
