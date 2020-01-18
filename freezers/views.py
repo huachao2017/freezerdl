@@ -143,7 +143,7 @@ class MulitImage(APIView):
             group_id = int(request.query_params['groupid'])
             model_id = int(request.query_params['modelid'])
 
-            imagefiles = request.data['imagefiles']
+            imagenames = request.data['imagenames']
 
             logger.info(request.data)
 
