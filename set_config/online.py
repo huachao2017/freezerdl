@@ -8,6 +8,7 @@ yolov3_train_params = {
     "type_all_echos":400,# 3000
     "type_add_echos":200,# 500
     "predict_wfile":"/data/ai/yolov3/model/{}_{}/wfile_{}.txt",
+    "predict_wfile_path":"/data/ai/yolov3/model/{}_{}/",
     "default_config_params":{
         "1-1":{
             'Ap':'',
