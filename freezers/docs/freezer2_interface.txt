@@ -25,7 +25,7 @@ deviceid string，设备id
 
 2、多图片检测图片接口(post)：http://$dns$/api/mulitimage?groupid=xx&modelid=xx
 post入参：
-filenames  "a,b,c"
+imagenames  "a,b,c"
 a file
 b file
 c file
@@ -73,7 +73,7 @@ c file
 
 curl -X POST \
   http://freezerai.fastxbox.cn/api/mulitimage?groupid=1\&modelid=1 \
-  -F "filenames=a,b,c" -F "a=@1.jpg" -F "b=@2.jpg" -F "c=@3.jpg"
+  -F "imagenames=a,b,c" -F "a=@1.jpg" -F "b=@2.jpg" -F "c=@3.jpg"
 
 
 3、提交训练数据接口(post)：http://$dns$/api/addtrain?groupid=xx&modelid=xx
