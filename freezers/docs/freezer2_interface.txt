@@ -25,13 +25,12 @@ deviceid string，设备id
 
 2、多图片检测图片接口(post)：http://$dns$/api/mulitimage?groupid=xx&modelid=xx
 post入参：
-imagenames  "a,b,c"
-a file
-b file
-c file
+1.jpg file
+2.jpg file
+3.jpg file
 返回201：
 {
-    'a':[
+    '1.jpg':[
         {
             "class": 2,                           -- 检测类型 1至12
             "score": 0.5095015168190002,          -- 检测可能性评分
@@ -49,7 +48,7 @@ c file
             "ymax": 940                           -- 右下角纵坐标
         }
     ],
-    'b':[
+    '2.jpg':[
         {
             "class": 2,                           -- 检测类型 1至12
             "score": 0.5095015168190002,          -- 检测可能性评分
@@ -59,7 +58,7 @@ c file
             "ymax": 940                           -- 右下角纵坐标
         }
     ],
-    'c':[
+    '3.jpg':[
         {
             "class": 2,                           -- 检测类型 1至12
             "score": 0.5095015168190002,          -- 检测可能性评分
@@ -73,7 +72,7 @@ c file
 
 curl -X POST \
   http://freezerai.fastxbox.cn/api/mulitimage?groupid=1\&modelid=1 \
-  -F "imagenames=a,b,c" -F "a=@1.jpg" -F "b=@2.jpg" -F "c=@3.jpg"
+  -F "1.jpg=@1.jpg" -F "2.jpgb=@2.jpg" -F "3.jpg=@3.jpg"
 
 
 3、提交训练数据接口(post)：http://$dns$/api/addtrain?groupid=xx&modelid=xx
