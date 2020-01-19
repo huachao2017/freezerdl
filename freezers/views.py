@@ -158,8 +158,6 @@ class MulitImage(APIView):
 
             now = datetime.datetime.now()
             for image in request.FILES.getlist('file'):
-                # TODO image.name需要测试
-                # TODO image.read()需要测试
                 source = '{}/{}/{}/{}_{}_{}_{}'.format(settings.DETECT_DIR_NAME, group_id, now.strftime('%Y%m'),
                                                        now.strftime('%d%H'), now.strftime('%M%S'),
                                                        str(now.time()), image.name)
@@ -174,6 +172,7 @@ class MulitImage(APIView):
                 one_ret = detect_one_image(key, image_path, image_object)
                 ret[image.name] = one_ret
 
+            ret = json.dumps(ret, cls=NumpyEncoder)
             return Response(ret, status=status.HTTP_201_CREATED)
 
         except Exception as e:
