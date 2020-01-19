@@ -13,6 +13,8 @@ from model_train.keras_yolo3.train_test import train
 from model_train.keras_yolo3.train_test.mAp1 import predict,mAp
 import demjson
 import traceback
+from freezers.third_tools import dingtalk
+
 def train_service(group_id, model_id, type, jpg_path, xml_path, classnames, online_model_id=None):
     """
     训练service
@@ -42,6 +44,7 @@ def train_service(group_id, model_id, type, jpg_path, xml_path, classnames, onli
     except Exception as e:
         traceback.print_exc()
         des_msg = "error:e={}".format(e)
+        dingtalk.send_message(des_msg, 1)
         save_train_table(group_id, model_id, type,
                          train_los_time=0, val_los_time=0,
                          good_config_params='', all_config_params='', status=0,
