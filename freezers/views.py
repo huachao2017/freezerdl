@@ -112,7 +112,7 @@ def detect_one_image(key, image_path, image_object):
     if len(p_box) > 0:
         image_dir = os.path.dirname(image_path)
         visual_image_path = os.path.join(image_dir, 'visual_' + os.path.split(image_path)[-1])
-        image_np = Image.fromarray(cv2.cvtColor(image_np, cv2.COLOR_BGR2RGB))
+        image_np = cv2.cvtColor(image_np, cv2.COLOR_BGR2RGB)
         vis_util.visualize_boxes_and_labels_on_image_array(
             image_np,
             np.array(p_box),
