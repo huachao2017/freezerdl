@@ -5,9 +5,10 @@ yolov3_train_params = {
     "model_dir":"/data/ai/yolov3/model/{}_{}/",
     "log_dir":"/data/ai/yolov3/logs/{}_{}/",
     "convert_path":"/data/ai/yolov3/VOCdevkit/{}_{}/VOC2007/Convert/",
-    "type_all_echos":20,# 3000
-    "type_add_echos":5,# 500
+    "type_all_echos":600,# 3000
+    "type_add_echos":200,# 500
     "predict_wfile":"/data/ai/yolov3/model/{}_{}/wfile_{}.txt",
+    "predict_wfile_path":"/data/ai/yolov3/model/{}_{}/",
     "default_config_params":{
         "1-1":{
             'Ap':'',
