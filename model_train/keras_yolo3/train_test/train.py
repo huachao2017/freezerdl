@@ -9,6 +9,7 @@ import os
 import keras.backend as K
 from keras.layers import Input, Lambda
 from keras.models import Model
+from model_train.keras_yolo3.util import fileutils,write_img_name,voc_anotion
 from keras.optimizers import Adam
 from keras.callbacks import TensorBoard, ModelCheckpoint, ReduceLROnPlateau, EarlyStopping
 from model_train.keras_yolo3.yolo3.model import preprocess_true_boxes, yolo_body, tiny_yolo_body, yolo_loss
@@ -106,4 +107,8 @@ def _main(class_names,shop_id,batch_id,type,online_batch_id):
 
 if __name__ == '__main__':
     class_names=["8993175537445", "6942404230086", "6922255447833", "6928804010145", "6941704408317", "6911988014320", "6902083880781", "6922222702156", "6921168509256", "6942404210088", "6921168593576", "6941704408492", "6925303730574", "6928804011296", "6941704403824", "6925303770563", "6907992513560", "6920459905012"]
+    shop_id = 1
+    batch_id = 1
+    write_img_name.generate_main_txt(shop_id, batch_id)
+    voc_anotion.convert(shop_id, batch_id, class_names=class_names)
     _main(class_names,1,1,type=1,online_batch_id=1)
