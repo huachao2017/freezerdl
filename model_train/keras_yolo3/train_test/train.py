@@ -105,5 +105,5 @@ def _main(class_names,shop_id,batch_id,type,online_batch_id):
     train(shop_id,batch_id,model, train_params['convert_path'], input_shape, anchors, len(class_names), model_dir=train_params['model_dir'],type=type)
 
 if __name__ == '__main__':
-    class_names=["1","2","3","4","5"]
-    _main(class_names,1284,20191231,type=0,online_batch_id=None)
+    class_names=["8993175537445", "6942404230086", "6922255447833", "6928804010145", "6941704408317", "6911988014320", "6902083880781", "6922222702156", "6921168509256", "6942404210088", "6921168593576", "6941704408492", "6925303730574", "6928804011296", "6941704403824", "6925303770563", "6907992513560", "6920459905012"]
+    _main(class_names,1,1,type=1,online_batch_id=1)
