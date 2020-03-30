@@ -97,7 +97,7 @@ class FreezerImageViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, mixins
         return Response(ret, status=status.HTTP_201_CREATED, headers=headers)
 
 def detect_one_image(key, image_path, image_object):
-    now = datetime.datetime.now()
+    now = time.time()
     logger.info('begin detect image:{}'.format(image_path))
     image_np = cv2.imread(image_path)
     p_class, p_prob, p_box = yolov3_inss_map[key].predict_img(image_np)
@@ -130,7 +130,7 @@ def detect_one_image(key, image_path, image_object):
         image_object.visual = visual_image_path.replace(settings.MEDIA_ROOT, '')
     image_object.save()
     logger.info('end detect image:{}'.format(image_path))
-    logger.info("detect one img end-start time:{}".format(int(datetime.datetime.now()-now)))
+    logger.info("detect one img end-start time:{}".format(int(time.time()-now)))
     return ret
 
 
@@ -150,7 +150,7 @@ class MulitImage(APIView):
         try:
             group_id = int(request.query_params['groupid'])
             model_id = int(request.query_params['modelid'])
-
+            now1 = time.time()
             logger.info(request.FILES)
             try:
                 online_model = OnlineModels.objects.filter(group_id=group_id).filter(status=10).order_by('-id')[0]
@@ -177,7 +177,7 @@ class MulitImage(APIView):
 
             ret = json.dumps(ret, cls=NumpyEncoder)
 
-            logger.info("end-start time : {} ".format(int(datetime.datetime.now()-now)))
+            logger.info("end-start time : {} ".format(int(time.time()-now1)))
             return Response(ret, status=status.HTTP_201_CREATED)
 
         except Exception as e:
