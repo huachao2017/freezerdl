@@ -130,7 +130,7 @@ def detect_one_image(key, image_path, image_object):
         image_object.visual = visual_image_path.replace(settings.MEDIA_ROOT, '')
     image_object.save()
     logger.info('end detect image:{}'.format(image_path))
-    logger.info("detect one img end-start time:{}".format(int(time.time()-now)))
+    logger.info("detect one img end-start time:{}".format(float(time.time()-now)))
     return ret
 
 
@@ -177,7 +177,7 @@ class MulitImage(APIView):
 
             ret = json.dumps(ret, cls=NumpyEncoder)
 
-            logger.info("end-start time : {} ".format(int(time.time()-now1)))
+            logger.info("end-start time : {} ".format(float(time.time()-now1)))
             return Response(ret, status=status.HTTP_201_CREATED)
 
         except Exception as e:
