@@ -97,6 +97,7 @@ class FreezerImageViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, mixins
         return Response(ret, status=status.HTTP_201_CREATED, headers=headers)
 
 def detect_one_image(key, image_path, image_object):
+    now = datetime.datetime.now()
     logger.info('begin detect image:{}'.format(image_path))
     image_np = cv2.imread(image_path)
     p_class, p_prob, p_box = yolov3_inss_map[key].predict_img(image_np)
@@ -129,6 +130,7 @@ def detect_one_image(key, image_path, image_object):
         image_object.visual = visual_image_path.replace(settings.MEDIA_ROOT, '')
     image_object.save()
     logger.info('end detect image:{}'.format(image_path))
+    logger.info("detect one img end-start time:{}".format(int(datetime.datetime.now()-now)))
     return ret
 
 
@@ -174,6 +176,8 @@ class MulitImage(APIView):
                 ret[image.name] = one_ret
 
             ret = json.dumps(ret, cls=NumpyEncoder)
+
+            logger.info("end-start time : {} ".format(int(datetime.datetime.now()-now)))
             return Response(ret, status=status.HTTP_201_CREATED)
 
         except Exception as e:
