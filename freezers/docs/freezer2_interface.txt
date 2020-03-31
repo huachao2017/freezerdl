@@ -79,6 +79,7 @@ curl -X POST \
 post入参：json
 {
     "upcs":["6921168","6921169" ],  -- 对应xml文件里的类别
+    "type":0,                     -- 0 初始训练和增类训练   1 增量训练
     "files":[{
     "image":"http://$dns$/.../xx.jpg",          -- 照片路径
     "xml":"http://$dns$/.../xx.xml"             -- xml路径
