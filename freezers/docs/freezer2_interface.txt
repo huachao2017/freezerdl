@@ -93,7 +93,7 @@ post入参：json
 curl -X POST \
   http://freezerai.fastxbox.cn/api/addtrain?groupid=1\&modelid=1 \
   -H 'Content-Type: application/json' \
-  -d '{"upcs":["6921168","6921169"],"files":[{"image":"a","xml":"b"},{"image":"a","xml":"b"}]}'
+  -d '{"upcs":["6921168","6921169"],"files":[{"image":"a","xml":"b"},{"image":"a","xml":"b"}],'type':1}'
 
 
 4、训练完成，通知中亚后台接口

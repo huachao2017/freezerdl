@@ -84,7 +84,7 @@ if __name__ == "__main__":
                     os.makedirs(log_dir)
                     # 判断全量和增量
                     online_models = OnlineModels.objects.filter(status=10).filter(group_id=waiting_record.group_id).all()
-                    if len(online_models)>0:
+                    if waiting_record.type == 1:
                         type = 1
                         command = "nohup python3 {}/model_train/keras_yolo3/service/train_service.py --groupid={} --modelid={} --type={} --jpg_path={} --xml_path={} --classnames='{}' --online_model_id={} > {}train.out 2>&1 &".format(
                             settings.BASE_DIR,
