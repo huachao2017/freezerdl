@@ -71,10 +71,18 @@ if __name__ == "__main__":
                     os.makedirs(img_download_file_dir)
                     os.makedirs(xml_download_file_dir)
                     for file in files:
+                        time.sleep(0.2)
                         image_name = file['image'].split('/')[-1]
-                        urllib.request.urlretrieve(file['image'], os.path.join(img_download_file_dir, image_name))
+                        try:
+                            urllib.request.urlretrieve(file['image'], os.path.join(img_download_file_dir, image_name))
+                        except:
+                            print ("image_name = {} ,downfailed".format(image_name))
+                        time.sleep(0.2)
                         xml_name = file['xml'].split('/')[-1]
-                        urllib.request.urlretrieve(file['xml'], os.path.join(xml_download_file_dir, xml_name))
+                        try:
+                            urllib.request.urlretrieve(file['xml'], os.path.join(xml_download_file_dir, xml_name))
+                        except:
+                            print("xml_name = {} ,downfailed".format(xml_name))
 
                     waiting_record.pic_cnt = len(files)
                     waiting_record.save()
