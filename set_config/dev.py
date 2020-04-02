@@ -83,6 +83,7 @@ yolov3_predict_params = {
 
 app_config = {
     "online_model_dir": "/data/model/online",
+    "app_models_history": "/data/model/history/",
     "backend_dns": "http://admincs.bigmeddata.com"
 }
 
@@ -90,7 +91,6 @@ ai_config = {
     "img_download_file_dir_template": "/data/downloads/{}_{}/imgs/",
     "xml_download_file_dir_template": "/data/downloads/{}_{}/xmls/",
     "app_models_path": "/data/model/bak",
-    "app_models_history": "/data/model/history/",
     "app_host": "192.168.1.62",
     "app_user": "root",
     "app_password": "iShehui",
