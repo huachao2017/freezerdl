@@ -76,13 +76,13 @@ if __name__ == "__main__":
                         try:
                             urllib.request.urlretrieve(file['image'], os.path.join(img_download_file_dir, image_name))
                         except:
-                            print ("image_name = {} ,downfailed".format(image_name))
+                            print ("image_name = {} ,downfailed".format(file['image']))
                         time.sleep(0.2)
                         xml_name = file['xml'].split('/')[-1]
                         try:
                             urllib.request.urlretrieve(file['xml'], os.path.join(xml_download_file_dir, xml_name))
                         except:
-                            print("xml_name = {} ,downfailed".format(xml_name))
+                            print("xml_name = {} ,downfailed".format(file['xml']))
 
                     waiting_record.pic_cnt = len(files)
                     waiting_record.save()
@@ -155,6 +155,7 @@ if __name__ == "__main__":
             dingtalk.send_message(str(e), 2)
             print('守护进程出现错误：{}'.format(e))
         finally:
-            cursor_default.close()
+            print ("守护进程识败！")
+            # cursor_default.close()
 
         time.sleep(10)
