@@ -69,9 +69,11 @@ if __name__ == "__main__":
                     train_record.save()
                     # 发布上线
                     if settings.IS_TEST_SERVER:
-                        os.system('touch {}/main/test_settings.py'.format(settings.BASE_DIR))
+                        # os.system('touch {}/main/test_settings.py'.format(settings.BASE_DIR))
+                        os.popen("sh /home/src/freezerdl/shell_deamon/server.sh")
                     else:
-                        os.system('touch {}/main/settings.py'.format(settings.BASE_DIR))
+                        # os.system('touch {}/main/settings.py'.format(settings.BASE_DIR))
+                        os.popen("sh /home/src/freezerdl/shell_deamon/server.sh")
 
                     # 通知后台
                     url = "{}/v2/admin/training_model/add".format(config.app_config["backend_dns"])
