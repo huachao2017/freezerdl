@@ -154,8 +154,5 @@ if __name__ == "__main__":
             traceback.print_exc()
             dingtalk.send_message(str(e), 2)
             print('守护进程出现错误：{}'.format(e))
-        finally:
-            print ("守护进程识败！")
-            # cursor_default.close()
 
         time.sleep(10)
