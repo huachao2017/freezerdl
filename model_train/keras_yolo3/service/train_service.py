@@ -189,8 +189,8 @@ def save_train_table(group_id, model_id, type,train_los_time=0,val_los_time=0,go
     )]
     cursor_ai.executemany(insert_sql, data)
     cursor_ai.connection.commit()
-    conn.close()
-    cursor_ai.close()
+    # conn.close()
+    # cursor_ai.close()
 
 def parse_arguments(argv):
     # type,jpg_path,xml_path,classnames,online_batch_id
