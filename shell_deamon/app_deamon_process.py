@@ -54,16 +54,16 @@ if __name__ == "__main__":
                         online_models = OnlineModels.objects.get(id=raw_train_record[1])
                         online_models.status = 0
                         online_models.save()
-
-                    OnlineModels.objects.create(
-                        group_id = train_record.group_id,
-                        model_id = train_record.model_id,
-                        type = type,
-                        model_path = online_model_path,
-                        upcs = train_record.upcs,
-                        params = train_record.params,
-                        status = 10
-                    )
+                    else:
+                        OnlineModels.objects.create(
+                            group_id = train_record.group_id,
+                            model_id = train_record.model_id,
+                            type = type,
+                            model_path = online_model_path,
+                            upcs = train_record.upcs,
+                            params = train_record.params,
+                            status = 10
+                        )
 
                     train_record.status = 40
                     train_record.save()
