@@ -71,7 +71,7 @@ if __name__ == "__main__":
                     if settings.IS_TEST_SERVER:
                         os.system('touch {}/main/test_settings.py'.format(settings.BASE_DIR))
                     else:
-                        os.system('touch{}/main/settings.py'.format(settings.BASE_DIR))
+                        os.system('touch {}/main/settings.py'.format(settings.BASE_DIR))
 
                     # 通知后台
                     url = "{}/v2/admin/training_model/add".format(config.app_config["backend_dns"])
