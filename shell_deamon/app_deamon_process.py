@@ -26,22 +26,21 @@ if __name__ == "__main__":
         try:
 
             # 比较线上版本和训练表
-            cursor_default.execute("select tr.id from freezers_trainrecord as tr left join freezers_onlinemodels as om on tr.group_id = om.group_id and tr.model_id=om.model_id where tr.status=20 and om.model_id is null")
+            cursor_default.execute("select tr.id,om.id from freezers_trainrecord as tr left join freezers_onlinemodels as om on tr.group_id = om.group_id where tr.status=20")
             train_records = cursor_default.fetchall()
 
             for raw_train_record in train_records:
                 train_record = TrainRecord.objects.get(id=raw_train_record[0])
+
                 try:
                     begin_time = time.time()
-
-                    # 更新数据库表
-                    all_online_models = OnlineModels.objects.filter(group_id=train_record.group_id).filter(status=10).all()
-                    for online_model in all_online_models:
-                        online_model.status = 0
-                        online_model.save()
-
                     # 添加数据库表
                     online_model_dir = "{}/{}".format(config.app_config["online_model_dir"], train_record.group_id)
+                    online_model_file = os.path.join(online_model_dir,"0.h5")
+                    if os.path.exists(online_model_file):# 如果旧模型存在 把该模型拷贝到历史目录 方便回滚
+                        history_file = os.path.join(config.app_config["app_models_history"],str(train_record.group_id)+"_"+str(int(time.time()))+".h5")
+                        shutil.copyfile(online_model_file,history_file)
+
                     shutil.rmtree(online_model_dir, ignore_errors=True)
                     os.makedirs(online_model_dir)
                     type = 0
@@ -51,6 +50,11 @@ if __name__ == "__main__":
                     shutil.copy(train_record.model_path, online_model_path)
 
                     # 更新数据库表
+                    if raw_train_record[1] is not None and raw_train_record[1] > 0:
+                        online_models = OnlineModels.objects.get(id=raw_train_record[1])
+                        online_models.status = 0
+                        online_models.save()
+
                     OnlineModels.objects.create(
                         group_id = train_record.group_id,
                         model_id = train_record.model_id,
@@ -61,6 +65,8 @@ if __name__ == "__main__":
                         status = 10
                     )
 
+                    train_record.status = 40
+                    train_record.save()
                     # 发布上线
                     if settings.IS_TEST_SERVER:
                         os.system('touch {}/main/test_settings.py'.format(settings.BASE_DIR))
