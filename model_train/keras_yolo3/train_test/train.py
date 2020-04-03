@@ -27,7 +27,7 @@ def train(shop_id,batch_id,model, convert_path, input_shape, anchors, num_classe
     checkpoint = ModelCheckpoint(os.path.join(model_dir , model_name),monitor = 'val_loss',
                                  save_weights_only=True, save_best_only=True, period=2)
     batch_size = 15
-    val_split = 0.5
+    val_split = 0.3
     convert_path = str(convert_path).format(shop_id,batch_id)
     train_voc_file = os.path.join(convert_path,"2007_train.txt")
     with open(train_voc_file) as f:
@@ -39,8 +39,8 @@ def train(shop_id,batch_id,model, convert_path, input_shape, anchors, num_classe
         np.random.shuffle(lines)
         epochs = train_params['type_add_echos']
     num_val = int(len(lines)*val_split)
-    # num_train = len(lines) - num_val
-    num_train = len(lines)
+    num_train = len(lines) - num_val
+    # num_train = len(lines)
     print('Train on {} samples, val on {} samples, with batch size {}.'.format(num_train, num_val, batch_size))
     model.fit_generator(data_generator_wrap(lines[:num_train], batch_size, input_shape, anchors, num_classes),
                         steps_per_epoch=max(1, num_train // batch_size),
