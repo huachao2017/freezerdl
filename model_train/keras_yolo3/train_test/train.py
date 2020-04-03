@@ -36,6 +36,7 @@ def train(shop_id,batch_id,model, convert_path, input_shape, anchors, num_classe
         np.random.shuffle(lines)
         epochs = train_params['type_all_echos']
     else:
+        np.random.shuffle(lines)
         epochs = train_params['type_add_echos']
     num_val = int(len(lines)*val_split)
     num_train = len(lines) - num_val
