@@ -71,7 +71,7 @@ if __name__ == "__main__":
                     os.makedirs(img_download_file_dir)
                     os.makedirs(xml_download_file_dir)
                     for file in files:
-                        time.sleep(0.2)
+                        # time.sleep(0.2)
                         image_name = file['image'].split('/')[-1]
                         try:
                             urllib.request.urlretrieve(file['image'], os.path.join(img_download_file_dir, image_name))
