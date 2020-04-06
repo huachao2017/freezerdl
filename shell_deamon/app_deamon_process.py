@@ -26,7 +26,7 @@ if __name__ == "__main__":
         try:
 
             # 比较线上版本和训练表
-            cursor_default.execute("select tr.id,om.id from freezers_trainrecord as tr left join freezers_onlinemodels as om on tr.group_id = om.group_id where tr.status=20")
+            cursor_default.execute("select tr.id,om.id from freezers_trainrecord as tr left join freezers_onlinemodels as om on tr.group_id = om.group_id where tr.status=20 and om.status = 10")
             train_records = cursor_default.fetchall()
 
             for raw_train_record in train_records:
