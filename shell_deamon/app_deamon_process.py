@@ -18,7 +18,7 @@ from freezers.third_tools import dingtalk
 from django.conf import settings
 
 if __name__ == "__main__":
-    # while True:
+    while True:
         print('workflow deamon is alive')
         close_old_connections()
 
