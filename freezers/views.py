@@ -192,17 +192,14 @@ class AddTrain(APIView):
             model_id = int(request.query_params['modelid'])
             type = int(request.query_params['type'])
             data = request.data
-            print ("files:")
-            print (len(list(json.dumps(data["files"]))))
-            logger.info("files len:{} ".format(len(list(json.dumps(data["files"])))))
-            # TrainRecord.objects.create(
-            #     group_id=group_id,
-            #     model_id=model_id,
-            #     upcs=json.dumps(data["upcs"]),
-            #     datas=json.dumps(data["files"]),
-            #     type = type,
-            #     status=0
-            # )
+            TrainRecord.objects.create(
+                group_id=group_id,
+                model_id=model_id,
+                upcs=json.dumps(data["upcs"]),
+                datas=json.dumps(data["files"]),
+                type = type,
+                status=0
+            )
             return Response(status=status.HTTP_200_OK)
 
         except Exception as e:
