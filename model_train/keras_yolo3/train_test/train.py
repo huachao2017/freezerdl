@@ -26,7 +26,7 @@ def train(shop_id,batch_id,model, convert_path, input_shape, anchors, num_classe
     model_name = str(shop_id)+"_"+str(batch_id)+".h5"
     checkpoint = ModelCheckpoint(os.path.join(model_dir , model_name),monitor = 'val_loss',
                                  save_weights_only=True, save_best_only=True, period=2)
-    batch_size = 15
+    batch_size = 30
     val_split = 0.3
     convert_path = str(convert_path).format(shop_id,batch_id)
     train_voc_file = os.path.join(convert_path,"2007_train.txt")
