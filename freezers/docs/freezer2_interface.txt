@@ -70,6 +70,9 @@ post入参：
     ],
 }
 
+curl -XPOST  "http://ai.magexiot.com/api/mulitimage?groupid=4&modelid=16" -F"source=@1.jpg"
+
+
 curl -X POST \
   http://freezerai.fastxbox.cn/api/mulitimage?groupid=1\&modelid=1 \
   -F "file=@1.jpg" -F "file=@2.jpg" -F "file=@3.jpg"
