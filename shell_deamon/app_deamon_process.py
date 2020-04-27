@@ -64,7 +64,7 @@ if __name__ == "__main__":
             cursor_default.execute("select id from freezers_trainrecord where status = 20")
             train_record_ids = cursor_default.fetchall()
             for train_record_id in train_record_ids:
-                train_record = TrainRecord.objects.get(id=train_record_id)
+                train_record = TrainRecord.objects.get(id=train_record_id[0])
                 cursor_default.execute("select id from freezers_onlinemodels where group_id = {}".format(train_record.group_id))
                 online_model_id = cursor_default.fetchone()
                 if online_model_id is None:
@@ -146,5 +146,6 @@ if __name__ == "__main__":
         except Exception as e:
             dingtalk.send_message(str(e), 3)
             print('守护进程出现错误：{}'.format(e))
+            traceback.print_exc()
 
         time.sleep(10)
