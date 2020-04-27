@@ -96,6 +96,7 @@ if __name__ == "__main__":
         except Exception as e:
             dingtalk.send_message(str(e), 3)
             print('守护进程出现错误：{}'.format(e))
+            traceback.print_exc()
 
         # 线上表存在groupid 情况下
         try:
