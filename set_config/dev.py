@@ -77,10 +77,92 @@ yolov3_train_params = {
     },
 }
 
+yolov4_train_params = {
+    "JPEGImages_path":"/data/ai/ai_data/yolov4/VOCdevkit/{}_{}/VOC2007/JPEGImages/",
+    "Annotations_path":"/data/ai/ai_data/yolo4/VOCdevkit/{}_{}/VOC2007/Annotations/",
+    "Main_path":"/data/ai/ai_data/yolov4/VOCdevkit/{}_{}/VOC2007/ImageSets/Main/",
+    "model_dir":"/data/ai/yolov4/model/{}_{}/",
+    "log_dir":"/data/ai/yolov4/logs/{}_{}/",
+    "convert_path":"/data/ai/yolov4/VOCdevkit/{}_{}/VOC2007/Convert/",
+    "type_all_echos":700,# 3000
+    "type_add_echos":80,# 500
+    "predict_wfile":"/data/ai/yolov4/model/{}_{}/wfile_{}.txt",
+    "predict_wfile_path":"/data/ai/yolov4/model/{}_{}/",
+    "default_config_params":{
+        "1-1":{
+            'Ap':'',
+            'mAp':0,
+            'score': 0.25,
+            'iou': 0.45,
+            "diff_switch_iou": (True, 0.6),
+            "single_switch_iou_minscore": (True, 0.0, 0.28)
+        },
+        "1-2":{
+            'Ap': '',
+            'mAp': 0,
+            'score': 0.25,
+            'iou': 0.45,
+            "diff_switch_iou": (False, 0.6),
+            "single_switch_iou_minscore": (False, 0.0, 0.28)
+        },
+        "2-1": {
+            'Ap': '',
+            'mAp': 0,
+            'score': 0.2,
+            'iou': 0.45,
+            "diff_switch_iou": (True, 0.6),
+            "single_switch_iou_minscore": (True, 0.0, 0.28)
+        },
+        "2-2": {
+            'Ap': '',
+            'mAp': 0,
+            'score': 0.2,
+            'iou': 0.45,
+            "diff_switch_iou": (False, 0.6),
+            "single_switch_iou_minscore": (False, 0.0, 0.28)
+        },
+        "3-1": {
+            'Ap': '',
+            'mAp': 0,
+            'score': 0.3,
+            'iou': 0.45,
+            "diff_switch_iou": (True, 0.6),
+            "single_switch_iou_minscore": (True, 0.0, 0.28)
+        },
+        "3-2":{
+            'Ap': '',
+            'mAp': 0,
+            'score': 0.3,
+            'iou': 0.45,
+            "diff_switch_iou": (False, 0.6),
+            "single_switch_iou_minscore": (False, 0.0, 0.28)
+        },
+        "4-1": {
+            'Ap': '',
+            'mAp': 0,
+            'score': 0.35,
+            'iou': 0.45,
+            "diff_switch_iou": (True, 0.6),
+            "single_switch_iou_minscore": (True, 0.0, 0.38)
+        },
+        "4-2": {
+            'Ap': '',
+            'mAp': 0,
+            'score': 0.35,
+            'iou': 0.45,
+            "diff_switch_iou": (False, 0.6),
+            "single_switch_iou_minscore": (False, 0.0, 0.38)
+        },
+    },
+}
+
 yolov3_predict_params = {
     "font_file": './model_train/keras_yolo3/font/FiraMono-Medium.otf',
 },
 
+yolov4_predict_params = {
+    "font_file": './model_train/keras_yolo4/font/FiraMono-Medium.otf',
+},
 app_config = {
     "online_model_dir": "/data/model/online",
     "app_models_history": "/data/model/history/",
