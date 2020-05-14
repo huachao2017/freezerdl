@@ -78,16 +78,16 @@ yolov3_train_params = {
 }
 
 yolov4_train_params = {
-    "JPEGImages_path":"/data/ai/ai_data/yolov3/VOCdevkit/{}_{}/VOC2007/JPEGImages/",
-    "Annotations_path":"/data/ai/ai_data/yolov3/VOCdevkit/{}_{}/VOC2007/Annotations/",
-    "Main_path":"/data/ai/ai_data/yolov3/VOCdevkit/{}_{}/VOC2007/ImageSets/Main/",
-    "model_dir":"/data/ai/yolov3/model/{}_{}/",
-    "log_dir":"/data/ai/yolov3/logs/{}_{}/",
-    "convert_path":"/data/ai/yolov3/VOCdevkit/{}_{}/VOC2007/Convert/",
+    "JPEGImages_path":"/data/ai/ai_data/yolov4/VOCdevkit/{}_{}/VOC2007/JPEGImages/",
+    "Annotations_path":"/data/ai/ai_data/yolo4/VOCdevkit/{}_{}/VOC2007/Annotations/",
+    "Main_path":"/data/ai/ai_data/yolov4/VOCdevkit/{}_{}/VOC2007/ImageSets/Main/",
+    "model_dir":"/data/ai/yolov4/model/{}_{}/",
+    "log_dir":"/data/ai/yolov4/logs/{}_{}/",
+    "convert_path":"/data/ai/yolov4/VOCdevkit/{}_{}/VOC2007/Convert/",
     "type_all_echos":700,# 3000
     "type_add_echos":80,# 500
-    "predict_wfile":"/data/ai/yolov3/model/{}_{}/wfile_{}.txt",
-    "predict_wfile_path":"/data/ai/yolov3/model/{}_{}/",
+    "predict_wfile":"/data/ai/yolov4/model/{}_{}/wfile_{}.txt",
+    "predict_wfile_path":"/data/ai/yolov4/model/{}_{}/",
     "default_config_params":{
         "1-1":{
             'Ap':'',
@@ -155,13 +155,12 @@ yolov4_train_params = {
         },
     },
 }
-
 yolov3_predict_params = {
     "font_file": './model_train/keras_yolo3/font/FiraMono-Medium.otf',
 },
 
 yolov4_predict_params = {
-    "font_file": './model_train/keras_yolo3/font/FiraMono-Medium.otf',
+    "font_file": './model_train/keras_yolo4/font/FiraMono-Medium.otf',
 },
 
 app_config = {
