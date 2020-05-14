@@ -57,7 +57,6 @@ class YOLO(object):
         self.anchors = np.array(default_anchors)
         self.sess = K.get_session()
         self.boxes, self.scores, self.classes = self.load_yolo()
-        self.gpu_num = gpu_num
 
     def load_yolo(self):
         model_path = os.path.expanduser(self.model_path)
@@ -79,14 +78,14 @@ class YOLO(object):
 
         print('{} model, anchors, and classes loaded.'.format(model_path))
 
-        if self.gpu_num >= 2:
-            self.yolo4_model = multi_gpu_model(self.yolo4_model, gpus=self.gpu_num)
+        if gpu_num >= 2:
+            self.yolo4_model = multi_gpu_model(self.yolo4_model, gpus=gpu_num)
 
         self.input_image_shape = K.placeholder(shape=(2,))
         boxes, scores, classes = yolo_eval(self.yolo4_model.output, self.anchors,
                                                           len(self.class_names), self.input_image_shape,
                                                           score_threshold=self.score)
-        return self.boxes, self.scores, self.classes
+        return boxes, scores, classes
     def detect_image(self, image, model_image_size=(608, 608)):
         start = timer()
         boxed_image = letterbox_image(image, tuple(reversed(model_image_size)))
@@ -167,7 +166,7 @@ class YOLO(object):
         out_boxes, out_scores, out_classes = self.sess.run(
             [self.boxes, self.scores, self.classes],
             feed_dict={
-                self.yolo_model.input: image_data,
+                self.yolo4_model.input: image_data,
                 self.input_image_shape: [image.size[1], image.size[0]],
                 #K.learning_phase(): 0
             })
