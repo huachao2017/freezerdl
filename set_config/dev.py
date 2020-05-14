@@ -79,7 +79,7 @@ yolov3_train_params = {
 
 yolov4_train_params = {
     "JPEGImages_path":"/data/ai/ai_data/yolov4/VOCdevkit/{}_{}/VOC2007/JPEGImages/",
-    "Annotations_path":"/data/ai/ai_data/yolo4/VOCdevkit/{}_{}/VOC2007/Annotations/",
+    "Annotations_path":"/data/ai/ai_data/yolov4/VOCdevkit/{}_{}/VOC2007/Annotations/",
     "Main_path":"/data/ai/ai_data/yolov4/VOCdevkit/{}_{}/VOC2007/ImageSets/Main/",
     "model_dir":"/data/ai/yolov4/model/{}_{}/",
     "log_dir":"/data/ai/yolov4/logs/{}_{}/",
