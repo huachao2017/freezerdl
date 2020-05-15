@@ -47,7 +47,7 @@ def train(shop_id,batch_id,model, convert_path, input_shape, anchors, num_classe
                         validation_data=data_generator_wrapper(lines[num_train:], batch_size, input_shape, anchors,
                                                                num_classes),
                         validation_steps=max(1, num_val // batch_size),
-                        epochs=50,
+                        epochs=epochs,
                         initial_epoch=1,
                         callbacks=[logging, checkpoint])
     model.save_weights(model_dir + model_name)
@@ -114,7 +114,7 @@ def data_generator_wrapper(annotation_lines, batch_size, input_shape, anchors, n
 
 def _main(class_names,shop_id,batch_id,type,online_batch_id):
     anchors = np.array(default_anchors)
-    input_shape = (416,416)
+    input_shape = (608,608)
     flag = False
     weights_path = None
     if online_batch_id is not None and type==1: # 增量训练
