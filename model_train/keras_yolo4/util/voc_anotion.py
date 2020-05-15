@@ -16,10 +16,10 @@ def convert_annotation(image_id, list_file,class_names,Annotations_path):
         list_file.write(" " + ",".join([str(a) for a in b]) + ',' + str(cls_id))
 
 def convert(shop_id,batch_id,class_names):
-    Main_path = str(config.yolov3_train_params['Main_path']).format(shop_id,batch_id)
-    JPEGImages_path = str(config.yolov3_train_params['JPEGImages_path']).format(shop_id,batch_id)
-    convert_path = str(config.yolov3_train_params['convert_path']).format(shop_id,batch_id)
-    Annotations_path = str(config.yolov3_train_params['Annotations_path']).format(shop_id, batch_id)
+    Main_path = str(config.yolov4_train_params['Main_path']).format(shop_id,batch_id)
+    JPEGImages_path = str(config.yolov4_train_params['JPEGImages_path']).format(shop_id,batch_id)
+    convert_path = str(config.yolov4_train_params['convert_path']).format(shop_id,batch_id)
+    Annotations_path = str(config.yolov4_train_params['Annotations_path']).format(shop_id, batch_id)
     for year, image_set in sets:
         image_ids = open(Main_path+'%s.txt'%(image_set)).read().strip().split()
         list_file = open((convert_path+'%s_%s.txt')%(year, image_set), 'w')
