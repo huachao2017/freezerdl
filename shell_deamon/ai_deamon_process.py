@@ -19,7 +19,11 @@ from django.db import connections
 from set_config import config
 from freezers.third_tools import dingtalk
 
+#YOLOV3
+# nohup_train = "nohup python3 {}/model_train/keras_yolo3/service/train_service.py --groupid={} --modelid={} --type={} --jpg_path={} --xml_path={} --classnames='{}' --online_model_id={} > {}train.out 2>&1 &"
 
+#YOLOV4
+nohup_train = "nohup python3 {}/model_train/keras_yolo4/service/train_service.py --groupid={} --modelid={} --type={} --jpg_path={} --xml_path={} --classnames='{}' --online_model_id={} > {}train.out 2>&1 &"
 class RemoteShell:
     def __init__(self, host, user, pwd):
         self.host = host
@@ -94,7 +98,7 @@ if __name__ == "__main__":
                     online_models = OnlineModels.objects.filter(status=10).filter(group_id=waiting_record.group_id).all()
                     if waiting_record.type == 1:
                         type = 1
-                        command = "nohup python3 {}/model_train/keras_yolo3/service/train_service.py --groupid={} --modelid={} --type={} --jpg_path={} --xml_path={} --classnames='{}' --online_model_id={} > {}train.out 2>&1 &".format(
+                        command = nohup_train.format(
                             settings.BASE_DIR,
                             waiting_record.group_id,
                             waiting_record.model_id,
@@ -107,7 +111,7 @@ if __name__ == "__main__":
                         )
                     else:
                         type = 0
-                        command = "nohup python3 {}/model_train/keras_yolo3/service/train_service.py --groupid={} --modelid={} --type={} --jpg_path={} --xml_path={} --classnames='{}' --online_model_id={} > {}train.out 2>&1 &".format(
+                        command = nohup_train.format(
                             settings.BASE_DIR,
                             waiting_record.group_id,
                             waiting_record.model_id,
