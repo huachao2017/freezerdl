@@ -20,10 +20,10 @@ from set_config import config
 from freezers.third_tools import dingtalk
 
 #YOLOV3
-nohup_train = "nohup python3 {}/model_train/keras_yolo3/service/train_service.py --groupid={} --modelid={} --type={} --jpg_path={} --xml_path={} --classnames='{}' --online_model_id={} > {}train.out 2>&1 &"
+# nohup_train = "nohup python3 {}/model_train/keras_yolo3/service/train_service.py --groupid={} --modelid={} --type={} --jpg_path={} --xml_path={} --classnames='{}' --online_model_id={} > {}train.out 2>&1 &"
 
 #YOLOV4
-# nohup_train = "nohup python3 {}/model_train/keras_yolo4/service/train_service.py --groupid={} --modelid={} --type={} --jpg_path={} --xml_path={} --classnames='{}' --online_model_id={} > {}train.out 2>&1 &"
+nohup_train = "nohup python3 {}/model_train/keras_yolo4/service/train_service.py --groupid={} --modelid={} --type={} --jpg_path={} --xml_path={} --classnames='{}' --online_model_id={} > {}train.out 2>&1 &"
 class RemoteShell:
     def __init__(self, host, user, pwd):
         self.host = host

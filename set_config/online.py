@@ -84,8 +84,8 @@ yolov4_train_params = {
     "model_dir":"/data/ai/yolov4/model/{}_{}/",
     "log_dir":"/data/ai/yolov4/logs/{}_{}/",
     "convert_path":"/data/ai/yolov4/VOCdevkit/{}_{}/VOC2007/Convert/",
-    "type_all_echos":700,# 3000
-    "type_add_echos":80,# 500
+    "type_all_echos":100,# 3000
+    "type_add_echos":30,# 500
     "predict_wfile":"/data/ai/yolov4/model/{}_{}/wfile_{}.txt",
     "predict_wfile_path":"/data/ai/yolov4/model/{}_{}/",
     "default_config_params":{
