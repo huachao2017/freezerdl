@@ -22,7 +22,8 @@ from PIL import Image
 import requests
 import traceback
 from freezers.third_tools import visualization_utils as vis_util
-from model_train.keras_yolo3.yolo3 import yolo
+# from model_train.keras_yolo3.yolo3 import yolo
+from model_train.keras_yolo4.yolo4 import yolo
 logger = logging.getLogger("django")
 def start_yolov3_map_models():
     yolov3_ins_map = {}
