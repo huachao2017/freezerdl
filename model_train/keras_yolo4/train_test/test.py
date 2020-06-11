@@ -16,7 +16,7 @@ def test(test_jpg_path,test_jpg_write_path):
     files = os.listdir(test_jpg_path)
     for file in files:
         img = Image.open(os.path.join(test_jpg_path,file))
-        img = YOLO.detect_image(img)
+        img, out_classes, out_scores, out_boxes = YOLO.detect_image(img)
         img.save(os.path.join(test_jpg_write_path,file))
 def __main():
     test_jpg_path = "/data/ai/ai_data/test/"
