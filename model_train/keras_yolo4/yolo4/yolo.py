@@ -108,7 +108,7 @@ class YOLO(object):
             out_classes, out_scores, out_boxes = proxy.single_filter(self.single_iou, self.single_min_score,
                                                                      out_classes, out_scores, out_boxes)
         print('Found {} boxes for {}'.format(len(out_boxes), 'img'))
-        font_file = config1.yolov4_predict_params['font_file']
+        font_file = config1.yolov4_predict_params[0]['font_file']
         font = ImageFont.truetype(font=font_file,
                     size=np.floor(3e-2 * image.size[1] + 0.5).astype('int32'))
         thickness = (image.size[0] + image.size[1]) // 300
