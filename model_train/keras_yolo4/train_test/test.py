@@ -18,7 +18,10 @@ def test(test_jpg_path,test_jpg_write_path):
         img = Image.open(os.path.join(test_jpg_path,file))
         img = YOLO.detect_image(img)
         img.save(os.path.join(test_jpg_write_path,file))
-
+def __main():
+    test_jpg_path = "/data/ai/ai_data/test/"
+    test_jpg_write_path = "/data/ai/ai_data/test_predict/"
+    test(test_jpg_path, test_jpg_write_path)
 if __name__=='__main__':
     test_jpg_path = "/data/ai/ai_data/test/"
     test_jpg_write_path = "/data/ai/ai_data/test_predict/"
