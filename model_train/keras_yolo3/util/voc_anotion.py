@@ -8,13 +8,14 @@ def convert_annotation(image_id, list_file,class_names,Annotations_path):
     for obj in root.iter('object'):
         difficult = obj.find('difficult').text
         cls = obj.find('name').text
-        if cls not in class_names or int(difficult)==1:
-            continue
-        cls_id = class_names.index(cls)
-        xmlbox = obj.find('bndbox')
-        b = (int(xmlbox.find('xmin').text), int(xmlbox.find('ymin').text), int(xmlbox.find('xmax').text), int(xmlbox.find('ymax').text))
         if class_names is None:
             cls_id = 1
+        else:
+            if cls not in class_names or int(difficult)==1:
+                continue
+            cls_id = class_names.index(cls)
+        xmlbox = obj.find('bndbox')
+        b = (int(xmlbox.find('xmin').text), int(xmlbox.find('ymin').text), int(xmlbox.find('xmax').text), int(xmlbox.find('ymax').text))
         list_file.write(" " + ",".join([str(a) for a in b]) + ',' + str(cls_id))
 
 def convert(shop_id,batch_id,class_names=None):
