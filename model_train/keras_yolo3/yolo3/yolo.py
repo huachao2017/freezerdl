@@ -17,7 +17,7 @@ from model_train.keras_yolo3.yolo3.utils import letterbox_image
 from model_train.keras_yolo3.good_proxy import proxy
 import os
 from keras.utils import multi_gpu_model
-from set_config import config
+from set_config import config as config1
 from model_train.keras_yolo3.util.default_anchors import default_anchors
 import tensorflow as tf
 from keras.backend.tensorflow_backend import set_session
@@ -141,7 +141,8 @@ class YOLO(object):
             out_classes, out_scores, out_boxes = proxy.single_filter(self.single_iou, self.single_min_score,out_classes, out_scores, out_boxes)
 
         print('Found {} boxes for {}'.format(len(out_boxes), 'img'))
-        font_file = config.yolov3_predict_params['font_file']
+        # font_file = config.yolov3_predict_params['font_file']
+        font_file = config1.yolov3_predict_params[0]['font_file']
         font = ImageFont.truetype(font=font_file,
                     size=np.floor(3e-2 * image.size[1] + 0.5).astype('int32'))
         thickness = (image.size[0] + image.size[1]) // 300
