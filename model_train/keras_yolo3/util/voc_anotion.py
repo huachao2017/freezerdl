@@ -13,9 +13,11 @@ def convert_annotation(image_id, list_file,class_names,Annotations_path):
         cls_id = class_names.index(cls)
         xmlbox = obj.find('bndbox')
         b = (int(xmlbox.find('xmin').text), int(xmlbox.find('ymin').text), int(xmlbox.find('xmax').text), int(xmlbox.find('ymax').text))
+        if class_names is None:
+            cls_id = 1
         list_file.write(" " + ",".join([str(a) for a in b]) + ',' + str(cls_id))
 
-def convert(shop_id,batch_id,class_names):
+def convert(shop_id,batch_id,class_names=None):
     Main_path = str(config.yolov3_train_params['Main_path']).format(shop_id,batch_id)
     JPEGImages_path = str(config.yolov3_train_params['JPEGImages_path']).format(shop_id,batch_id)
     convert_path = str(config.yolov3_train_params['convert_path']).format(shop_id,batch_id)

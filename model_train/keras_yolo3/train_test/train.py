@@ -109,9 +109,9 @@ def _main(class_names,shop_id,batch_id,type,online_batch_id):
     train(shop_id,batch_id,model, train_params['convert_path'], input_shape, anchors, len(class_names), model_dir=train_params['model_dir'],type=type)
 
 if __name__ == '__main__':
-    class_names=["8993175537445", "6942404230086", "6922255447833", "6928804010145", "6941704408317", "6911988014320", "6902083880781", "6922222702156", "6921168509256", "6942404210088", "6921168593576", "6941704408492", "6925303730574", "6928804011296", "6941704403824", "6925303770563", "6907992513560", "6920459905012"]
+    class_names=None
     shop_id = 1
     batch_id = 1
     write_img_name.generate_main_txt(shop_id, batch_id)
     voc_anotion.convert(shop_id, batch_id, class_names=class_names)
-    _main(class_names,1,1,type=1,online_batch_id=1)
+    _main(1,1,1,type=0,online_batch_id=1)
