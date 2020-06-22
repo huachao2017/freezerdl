@@ -114,4 +114,4 @@ if __name__ == '__main__':
     batch_id = 39
     write_img_name.generate_main_txt(shop_id, batch_id)
     voc_anotion.convert(shop_id, batch_id, class_names=class_names)
-    _main(1,1,1,type=0,online_batch_id=1)
+    _main(1,shop_id,batch_id,type=0,online_batch_id=1)
