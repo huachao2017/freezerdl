@@ -170,8 +170,8 @@ app_config = {
 }
 
 ai_config = {
-    "img_download_file_dir_template": "/data/downloads/{}_{}/imgs/",
-    "xml_download_file_dir_template": "/data/downloads/{}_{}/xmls/",
+    "img_download_file_dir_template": "/home/downloads/{}_{}/imgs/",
+    "xml_download_file_dir_template": "/home/downloads/{}_{}/xmls/",
     "app_models_path": "/data/model/bak",
     "app_host": "101.133.133.221",
     "app_user": "root",
