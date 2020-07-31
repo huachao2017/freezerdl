@@ -9,7 +9,7 @@ diff_switch_iou = [False,0.6]
 single_switch_iou_minscore = [False,0.0,0.28]
 model_path = "/home/ai/yolov3/model/8_43/8_43.h5"
 iou = 0.45
-score = 0.2
+score = 0.1
 YOLO = yolo.YOLO(class_names,diff_switch_iou,single_switch_iou_minscore,model_path,iou,score)
 
 def test(test_jpg_path,test_jpg_write_path):
