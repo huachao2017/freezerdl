@@ -21,7 +21,7 @@ from freezers import views
 router = DefaultRouter()
 
 router.register(r'freezerimage', views.FreezerImageViewSet)
-router.register(r'save_img', views.FreezerImageViewSet1)
+# router.register(r'save_img', views.FreezerImageViewSet1)
 router.register(r'onlinemodels', views.OnlineModelsViewSet)
 router.register(r'trainrecord', views.TrainRecordViewSet)
 
