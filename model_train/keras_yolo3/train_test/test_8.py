@@ -7,7 +7,7 @@ import cv2
 class_names = ["6926483420125", "6926483400011", "6926483420088"]
 diff_switch_iou = [False,0.6]
 single_switch_iou_minscore = [False,0.0,0.28]
-model_path = "/data/ai/yolov3/model/8_43/8_43.h5"
+model_path = "/home/ai/yolov3/model/8_43/8_43.h5"
 iou = 0.45
 score = 0.2
 YOLO = yolo.YOLO(class_names,diff_switch_iou,single_switch_iou_minscore,model_path,iou,score)
