@@ -97,6 +97,20 @@ class FreezerImageViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, mixins
 
         return Response(ret, status=status.HTTP_201_CREATED, headers=headers)
 
+
+class FreezerImageViewSet1(mixins.CreateModelMixin, mixins.ListModelMixin, mixins.RetrieveModelMixin,
+                          viewsets.GenericViewSet):
+    # queryset = FreezerImage.objects.order_by('-id')
+    # serializer_class = FreezerImageSerializer
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        logger.info(serializer.instance.detectid+","+serializer.instance.source.path)
+        return Response('', status=status.HTTP_201_CREATED, headers=headers)
+
 def detect_one_image(key, image_path, image_object):
     now = time.time()
     logger.info('begin detect image:{}'.format(image_path))
